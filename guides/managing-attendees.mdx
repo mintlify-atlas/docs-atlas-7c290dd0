@@ -1,0 +1,549 @@
+---
+title: Managing Attendees
+description: Complete guide to managing registrations, sending invitations, handling check-ins, and segmenting attendees
+---
+
+Effectively manage your event attendees from registration through post-event follow-up. This guide covers registration management, invitations, check-in processes, and attendee segmentation.
+
+## Overview
+
+Attendee management in EcoEvents includes:
+- Processing and approving registrations
+- Sending targeted invitations and communications
+- Managing event check-ins
+- Segmenting attendees for personalized experiences
+- Tracking attendee engagement and sustainability contributions
+
+<Note>
+All attendee data is encrypted and GDPR-compliant. Attendees control their data sharing preferences through their profile settings.
+</Note>
+
+## Managing Registrations
+
+<Steps>
+  <Step title="Access Attendee Dashboard">
+    Navigate to your event and select the **Attendees** tab. Here you'll see:
+
+    - Total registrations (confirmed, pending, cancelled)
+    - Registration timeline chart
+    - Revenue summary (for paid events)
+    - Sustainability engagement metrics
+  </Step>
+
+  <Step title="View Registration Details">
+    Click on any attendee to view their complete profile:
+
+    ```typescript
+    interface AttendeeProfile {
+      id: string;
+      name: string;
+      email: string;
+      registrationDate: string;
+      ticketType: string;
+      paymentStatus: 'pending' | 'completed' | 'refunded';
+      checkInStatus: 'not_checked_in' | 'checked_in';
+      dietaryPreferences?: string[];
+      accessibilityNeeds?: string;
+      sustainabilityCommitments: {
+        greenTransport: boolean;
+        digitalMaterials: boolean;
+        carbonOffset: boolean;
+      };
+      customResponses: Record<string, any>;
+    }
+    ```
+
+    View registration date, payment status, ticket type, dietary preferences, accessibility needs, and custom question responses.
+  </Step>
+
+  <Step title="Filter and Search Attendees">
+    Use powerful filtering to find specific attendees:
+
+    - **Search**: By name, email, company, or registration ID
+    - **Filter by Status**: Confirmed, pending approval, cancelled, checked-in
+    - **Filter by Ticket Type**: Early bird, standard, VIP, etc.
+    - **Filter by Sustainability**: Carbon offset opted-in, green transport pledged
+    - **Filter by Dietary Needs**: Vegetarian, vegan, gluten-free, allergies
+
+    ```javascript
+    const filterOptions = {
+      status: 'confirmed',
+      ticketType: ['early-bird', 'standard'],
+      sustainabilityFilters: {
+        carbonOffsetOptIn: true,
+        greenTransportPledge: true
+      },
+      dietaryPreferences: ['vegan', 'vegetarian']
+    };
+    ```
+  </Step>
+
+  <Step title="Approve or Reject Registrations">
+    For events requiring approval:
+
+    - Review pending registrations in the **Pending** tab
+    - Click **Approve** to confirm registration and trigger confirmation email
+    - Click **Reject** to decline (optionally include a reason)
+    - Use **Bulk Actions** to approve/reject multiple registrations at once
+
+    <Tip>
+    Set up automatic approval rules based on criteria like company domain, previous attendance, or registration completeness to save time.
+    </Tip>
+  </Step>
+</Steps>
+
+## Sending Invitations and Communications
+
+<Steps>
+  <Step title="Create Attendee Segments">
+    Before sending communications, create targeted segments:
+
+    ```javascript
+    const segments = [
+      {
+        name: 'VIP Attendees',
+        criteria: { ticketType: 'vip' }
+      },
+      {
+        name: 'Sustainability Champions',
+        criteria: {
+          sustainabilityScore: { min: 80 }
+        }
+      },
+      {
+        name: 'Local Attendees',
+        criteria: {
+          location: { radius: 50, unit: 'miles' }
+        }
+      },
+      {
+        name: 'First-Time Attendees',
+        criteria: {
+          previousEventCount: 0
+        }
+      }
+    ];
+    ```
+
+    Navigate to **Attendees > Segments** and click **Create Segment**.
+  </Step>
+
+  <Step title="Compose Email Campaign">
+    From the Attendees tab, click **Send Email** to access the email composer:
+
+    - **Recipients**: Select all attendees or specific segments
+    - **Subject Line**: Craft a compelling subject
+    - **Email Body**: Use the rich text editor with merge tags
+    - **Attachments**: Add PDFs, schedules, or sustainability guides
+    - **Send Options**: Schedule for later or send immediately
+
+    Available merge tags:
+    ```handlebars
+    {{attendee.name}}
+    {{attendee.email}}
+    {{event.name}}
+    {{event.date}}
+    {{attendee.ticketType}}
+    {{attendee.carbonFootprint}}
+    {{event.checkInURL}}
+    ```
+
+    <Warning>
+    Test emails are sent to your account. Always send a test before sending to all attendees.
+    </Warning>
+  </Step>
+
+  <Step title="Send Personalized Invitations">
+    For events with invitation-only sections (VIP lounges, workshops):
+
+    - Navigate to **Attendees > Invitations**
+    - Click **New Invitation Batch**
+    - Select attendees or upload CSV
+    - Choose invitation type and customize message
+    - Set RSVP deadline
+
+    ```javascript
+    const invitation = {
+      type: 'workshop',
+      title: 'Green Energy Solutions Workshop',
+      recipients: ['attendee-id-1', 'attendee-id-2'],
+      message: 'You are invited to an exclusive workshop...',
+      rsvpDeadline: '2026-06-10T23:59:59Z',
+      capacity: 30,
+      requiresRSVP: true
+    };
+    ```
+  </Step>
+
+  <Step title="Send Event Reminders">
+    Automated reminders keep attendance high:
+
+    - **1 Week Before**: Event details and preparation tips
+    - **48 Hours Before**: Final details and sustainability reminders
+    - **24 Hours Before**: Check-in information and logistics
+    - **Day Of**: Doors open, parking info, green transport options
+
+    Customize reminder timing and content in **Event Settings > Notifications**.
+  </Step>
+</Steps>
+
+## Managing Check-Ins
+
+<Steps>
+  <Step title="Set Up Check-In Method">
+    Choose your preferred check-in approach:
+
+    - **QR Code Scanning**: Attendees receive unique QR codes
+    - **Manual Entry**: Search by name or email
+    - **NFC Badges**: Tap-to-check-in (requires hardware)
+    - **Self-Service Kiosks**: Attendees check themselves in
+
+    ```typescript
+    interface CheckInConfig {
+      method: 'qr' | 'manual' | 'nfc' | 'self-service';
+      enablePhoto: boolean;
+      collectBadgePreference: boolean;
+      trackEntryTime: boolean;
+      allowMultipleCheckins: boolean;
+    }
+
+    const checkInConfig: CheckInConfig = {
+      method: 'qr',
+      enablePhoto: false,
+      collectBadgePreference: true,
+      trackEntryTime: true,
+      allowMultipleCheckins: false
+    };
+    ```
+  </Step>
+
+  <Step title="Use Mobile Check-In App">
+    Download the EcoEvents Check-In mobile app (iOS/Android):
+
+    1. Log in with your event organizer credentials
+    2. Select your event
+    3. Grant camera permissions for QR scanning
+    4. Begin scanning attendee QR codes
+
+    The app works offline and syncs when connectivity returns.
+
+    <Tip>
+    Assign multiple team members check-in roles to speed up entry during peak arrival times.
+    </Tip>
+  </Step>
+
+  <Step title="Perform Manual Check-In">
+    For attendees without QR codes:
+
+    1. Open the Check-In interface
+    2. Search by name, email, or registration ID
+    3. Verify attendee identity
+    4. Click **Check In**
+    5. Print badge if using physical badges
+
+    ```javascript
+    async function checkInAttendee(attendeeId) {
+      const response = await fetch(`/api/events/${eventId}/check-in`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          attendeeId,
+          checkInTime: new Date().toISOString(),
+          method: 'manual',
+          location: 'main-entrance'
+        })
+      });
+      
+      return response.json();
+    }
+    ```
+  </Step>
+
+  <Step title="Monitor Check-In Progress">
+    Track check-ins in real-time:
+
+    - View check-in rate on the live dashboard
+    - See which attendees haven't arrived
+    - Identify bottlenecks at entry points
+    - Send reminder notifications to no-shows
+
+    The dashboard displays:
+    - Total checked in vs. expected
+    - Check-ins per hour graph
+    - Busiest entry points
+    - Average check-in time per attendee
+  </Step>
+</Steps>
+
+## Segmenting Attendees
+
+<Steps>
+  <Step title="Create Behavioral Segments">
+    Segment attendees based on actions and engagement:
+
+    ```javascript
+    const behavioralSegments = [
+      {
+        name: 'Early Registrants',
+        criteria: {
+          registrationDate: { before: '2026-04-01' }
+        }
+      },
+      {
+        name: 'Session Participants',
+        criteria: {
+          sessionsAttended: { min: 3 }
+        }
+      },
+      {
+        name: 'Networking Enthusiasts',
+        criteria: {
+          connectionsMade: { min: 10 }
+        }
+      },
+      {
+        name: 'Survey Responders',
+        criteria: {
+          surveyCompleted: true
+        }
+      }
+    ];
+    ```
+  </Step>
+
+  <Step title="Create Sustainability Segments">
+    Group attendees by their environmental impact:
+
+    - **Carbon Heroes**: Top 20% in carbon reduction
+    - **Green Transport Users**: Arrived via public transit, bike, carpool
+    - **Digital-First**: Opted for all digital materials
+    - **Offset Contributors**: Purchased carbon offsets
+
+    ```typescript
+    interface SustainabilitySegment {
+      name: string;
+      criteria: {
+        carbonScore?: { min?: number; max?: number };
+        greenTransport?: boolean;
+        digitalMaterials?: boolean;
+        offsetPurchased?: boolean;
+        wasteReduction?: { min: number };
+      };
+    }
+
+    const sustainabilitySegment: SustainabilitySegment = {
+      name: 'Carbon Heroes',
+      criteria: {
+        carbonScore: { min: 90 },
+        greenTransport: true,
+        offsetPurchased: true
+      }
+    };
+    ```
+
+    <Note>
+    Sustainability segments can be used to award badges, offer incentives, or recognize eco-conscious attendees.
+    </Note>
+  </Step>
+
+  <Step title="Create Demographic Segments">
+    Segment by attendee characteristics:
+
+    - Company/organization
+    - Job title/role
+    - Geographic location
+    - Industry sector
+    - First-time vs. returning attendees
+
+    Use these segments for:
+    - Targeted networking opportunities
+    - Personalized session recommendations
+    - Customized follow-up communications
+    - Future event marketing
+  </Step>
+
+  <Step title="Export Segment Data">
+    Export attendee segments for external use:
+
+    1. Select a segment
+    2. Click **Export**
+    3. Choose format: CSV, Excel, JSON
+    4. Select fields to include
+    5. Download file
+
+    ```javascript
+    const exportConfig = {
+      segmentId: 'carbon-heroes',
+      format: 'csv',
+      fields: [
+        'name',
+        'email',
+        'company',
+        'carbonScore',
+        'sustainabilityActions'
+      ],
+      includeHeaders: true
+    };
+    ```
+
+    <Warning>
+    Exported data contains personal information. Follow your organization's data protection policies and obtain necessary consent.
+    </Warning>
+  </Step>
+</Steps>
+
+## Attendee Communication Best Practices
+
+### Timing Matters
+Send communications at optimal times:
+- Registration confirmations: Immediately
+- Event details: 2-3 weeks before
+- Final reminders: 48 hours before
+- Post-event surveys: Within 24 hours after event
+- Impact reports: 1 week after event
+
+### Personalize Messages
+Use merge tags and segments to create relevant, personalized communications. Generic mass emails have lower engagement rates.
+
+### Highlight Sustainability
+Regularly communicate sustainability goals and attendee contributions. People who see their impact are more engaged.
+
+### Keep It Concise
+Attendees receive many emails. Keep messages brief, scannable, and action-oriented.
+
+### Mobile-Optimize Everything
+Over 60% of attendees check event emails on mobile devices. Test all communications on mobile before sending.
+
+## Check-In Best Practices
+
+### Start Check-In Early
+Open check-in 1-2 hours before the event starts to avoid congestion.
+
+### Multiple Entry Points
+For large events, set up multiple check-in stations to reduce wait times.
+
+### Staff Appropriately
+Plan for 1 check-in staff member per 50-75 attendees during peak arrival times.
+
+### Test Technology
+Test QR scanners, badge printers, and internet connectivity before attendees arrive.
+
+### Have a Backup Plan
+Keep printed attendee lists and manual check-in sheets in case of technical issues.
+
+### Offer Digital Badges
+Reduce waste by offering digital badges instead of printed ones. Include QR codes for sustainability tracking.
+
+## Managing Cancellations and Refunds
+
+<Steps>
+  <Step title="Process Cancellation Request">
+    When an attendee requests cancellation:
+
+    1. Navigate to their registration
+    2. Click **Cancel Registration**
+    3. Select reason (optional but helpful)
+    4. Choose refund amount based on your policy
+    5. Confirm cancellation
+
+    ```javascript
+    const cancellationPolicy = {
+      '30+ days before': 100, // 100% refund
+      '15-29 days before': 50,  // 50% refund
+      '7-14 days before': 25,   // 25% refund
+      'Less than 7 days': 0     // No refund
+    };
+    ```
+  </Step>
+
+  <Step title="Process Refund">
+    Refunds are processed automatically based on your policy:
+
+    - Credit card refunds: 5-10 business days
+    - PayPal refunds: 24-48 hours
+    - Manual refunds: As per your process
+
+    Attendees receive a cancellation confirmation email with refund details.
+  </Step>
+
+  <Step title="Manage Waitlist">
+    If your event has a waitlist:
+
+    1. When a cancellation occurs, the system automatically notifies the next person on the waitlist
+    2. They have 48 hours to claim the spot
+    3. If unclaimed, the next person is notified
+
+    <Tip>
+    Enable automatic waitlist management in Event Settings to reduce manual work.
+    </Tip>
+  </Step>
+</Steps>
+
+## Advanced Attendee Features
+
+### Attendee Networking
+Enable the networking feature to allow attendees to:
+- View other attendees' profiles (with permission)
+- Schedule one-on-one meetings
+- Join interest-based groups
+- Exchange digital business cards
+
+### Attendee App
+Provide attendees with the EcoEvents mobile app for:
+- Event schedule and session information
+- Personal agenda building
+- Real-time notifications
+- Sustainability tracking dashboard
+- Networking features
+
+### Gamification
+Increase engagement with gamification:
+- Award points for sustainable actions
+- Create leaderboards for carbon reduction
+- Offer badges for milestones
+- Provide incentives for top participants
+
+```javascript
+const gamificationRules = {
+  points: {
+    greenTransport: 50,
+    digitalMaterials: 25,
+    sessionAttendance: 10,
+    surveyCompletion: 30,
+    networking: 5 // per connection
+  },
+  badges: [
+    { name: 'Carbon Hero', requirement: { points: 200 } },
+    { name: 'Super Networker', requirement: { connections: 20 } },
+    { name: 'Sustainability Champion', requirement: { carbonScore: 95 } }
+  ]
+};
+```
+
+## Next Steps
+
+- Learn how to [track sustainability impact](/guides/tracking-impact)
+- Set up [integrations with your tools](/guides/integrations)
+- Explore the [Attendees API](/api/attendees) for programmatic management
+- Review best practices for data privacy and GDPR compliance in attendee management
+
+## Troubleshooting
+
+### Attendee Not Receiving Emails
+- Check spam/junk folders
+- Verify email address is correct
+- Ensure your domain is properly authenticated (SPF, DKIM)
+- Check email delivery logs in Settings > Email Logs
+
+### Check-In QR Code Not Scanning
+- Ensure adequate lighting
+- Clean camera lens
+- Increase screen brightness on attendee device
+- Use manual check-in as backup
+
+### Duplicate Registrations
+- Use the merge tool in Attendees > Duplicates
+- Set up duplicate detection rules based on email or name
+- Enable single-registration-per-email enforcement
+
+For additional support, contact our team or visit the [help center](https://support.ecoevents.com).

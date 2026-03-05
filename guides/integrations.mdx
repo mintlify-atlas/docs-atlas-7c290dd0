@@ -1,0 +1,861 @@
+---
+title: Integrations
+description: Connect EcoEvents with webhooks, third-party tools, calendar systems, and communication platforms
+---
+
+Extend EcoEvents functionality by integrating with your existing tools and workflows. Connect to calendar systems, communication platforms, payment processors, and more.
+
+## Overview
+
+EcoEvents offers integrations with:
+- **Webhooks**: Real-time event notifications for custom workflows
+- **Calendar Systems**: Google Calendar, Outlook, Apple Calendar
+- **Communication Platforms**: Slack, Microsoft Teams, Discord
+- **Payment Processors**: Stripe, PayPal, Square
+- **CRM Systems**: Salesforce, HubSpot, Pipedrive
+- **Marketing Tools**: Mailchimp, SendGrid, Constant Contact
+- **Analytics**: Google Analytics, Mixpanel, Segment
+- **Sustainability Tools**: Carbon accounting and ESG reporting platforms
+
+<Note>
+All integrations use secure OAuth 2.0 authentication or API keys. Credentials are encrypted at rest and in transit.
+</Note>
+
+## Setting Up Webhooks
+
+Webhooks allow you to receive real-time notifications when events occur in EcoEvents.
+
+<Steps>
+  <Step title="Create Webhook Endpoint">
+    First, set up an endpoint to receive webhook POST requests:
+
+    ```javascript
+    // Example Express.js webhook endpoint
+    const express = require('express');
+    const crypto = require('crypto');
+
+    const app = express();
+    app.use(express.json());
+
+    app.post('/webhooks/ecoevents', (req, res) => {
+      // Verify webhook signature
+      const signature = req.headers['x-ecoevents-signature'];
+      const payload = JSON.stringify(req.body);
+      const secret = process.env.WEBHOOK_SECRET;
+      
+      const expectedSignature = crypto
+        .createHmac('sha256', secret)
+        .update(payload)
+        .digest('hex');
+      
+      if (signature !== expectedSignature) {
+        return res.status(401).send('Invalid signature');
+      }
+      
+      // Process webhook event
+      const { event, data } = req.body;
+      
+      switch (event) {
+        case 'registration.created':
+          handleNewRegistration(data);
+          break;
+        case 'event.published':
+          handleEventPublished(data);
+          break;
+        case 'checkin.completed':
+          handleCheckin(data);
+          break;
+        default:
+          console.log(`Unhandled event: ${event}`);
+      }
+      
+      res.status(200).send('Webhook received');
+    });
+
+    app.listen(3000);
+    ```
+  </Step>
+
+  <Step title="Register Webhook in EcoEvents">
+    Navigate to **Settings > Integrations > Webhooks**:
+
+    1. Click **Add Webhook**
+    2. Enter your endpoint URL
+    3. Select events to subscribe to
+    4. Save and copy the signing secret
+    5. Test the webhook
+
+    ```typescript
+    interface WebhookConfig {
+      url: string;
+      events: WebhookEvent[];
+      enabled: boolean;
+      secret: string;
+      retryConfig: {
+        maxRetries: number;
+        backoffMultiplier: number;
+      };
+    }
+
+    type WebhookEvent =
+      | 'event.created'
+      | 'event.updated'
+      | 'event.published'
+      | 'event.cancelled'
+      | 'registration.created'
+      | 'registration.updated'
+      | 'registration.cancelled'
+      | 'checkin.completed'
+      | 'payment.completed'
+      | 'payment.failed'
+      | 'impact.calculated'
+      | 'report.generated';
+    ```
+  </Step>
+
+  <Step title="Handle Webhook Events">
+    Process different event types:
+
+    ```javascript
+    async function handleNewRegistration(data) {
+      const { attendee, event, registration } = data;
+      
+      // Add to CRM
+      await addToCRM({
+        email: attendee.email,
+        name: attendee.name,
+        company: attendee.company,
+        eventName: event.name,
+        registrationDate: registration.createdAt
+      });
+      
+      // Send to analytics
+      await trackEvent('registration_completed', {
+        eventId: event.id,
+        ticketType: registration.ticketType,
+        revenue: registration.amount
+      });
+      
+      // Notify team on Slack
+      await sendSlackMessage(
+        `New registration: ${attendee.name} for ${event.name}`
+      );
+    }
+
+    async function handleCheckin(data) {
+      const { attendee, event, checkInTime } = data;
+      
+      // Update real-time dashboard
+      await updateDashboard(event.id, {
+        checkedInCount: data.totalCheckedIn,
+        lastCheckIn: checkInTime
+      });
+      
+      // Send welcome notification
+      await sendWelcomeNotification(attendee.email);
+    }
+    ```
+
+    <Tip>
+    Implement idempotency in your webhook handlers. EcoEvents may send the same webhook multiple times for reliability.
+    </Tip>
+  </Step>
+
+  <Step title="Monitor Webhook Delivery">
+    Track webhook delivery status in the dashboard:
+
+    - View delivery logs
+    - See success/failure rates
+    - Retry failed webhooks
+    - Monitor latency
+
+    Set up alerts for webhook failures in **Settings > Notifications**.
+  </Step>
+</Steps>
+
+## Calendar System Integrations
+
+Sync events with popular calendar systems.
+
+<Steps>
+  <Step title="Google Calendar Integration">
+    Connect your Google Calendar:
+
+    1. Navigate to **Settings > Integrations > Calendar**
+    2. Click **Connect Google Calendar**
+    3. Authorize EcoEvents access
+    4. Configure sync settings
+
+    ```typescript
+    interface CalendarSyncConfig {
+      provider: 'google' | 'outlook' | 'apple';
+      syncDirection: 'two-way' | 'ecoevents-to-calendar' | 'calendar-to-ecoevents';
+      syncFrequency: 'real-time' | 'hourly' | 'daily';
+      calendarId: string;
+      includeAttendees: boolean;
+      sendInvites: boolean;
+      reminderSettings: {
+        enabled: boolean;
+        times: number[]; // minutes before event
+      };
+    }
+
+    const googleCalendarConfig: CalendarSyncConfig = {
+      provider: 'google',
+      syncDirection: 'two-way',
+      syncFrequency: 'real-time',
+      calendarId: 'primary',
+      includeAttendees: true,
+      sendInvites: true,
+      reminderSettings: {
+        enabled: true,
+        times: [1440, 60, 15] // 1 day, 1 hour, 15 minutes
+      }
+    };
+    ```
+
+    Features:
+    - Automatic event creation in Google Calendar
+    - Two-way sync for updates
+    - Attendee list synchronization
+    - Calendar invites with .ics files
+    - Reminder configuration
+  </Step>
+
+  <Step title="Outlook/Microsoft 365 Integration">
+    Similar setup for Microsoft calendars:
+
+    1. Click **Connect Outlook**
+    2. Sign in with Microsoft account
+    3. Grant necessary permissions
+    4. Configure sync settings
+
+    Supports both personal Outlook and Microsoft 365 business accounts.
+  </Step>
+
+  <Step title="Generate Calendar Links">
+    Provide attendees with calendar links:
+
+    ```javascript
+    // Generate add-to-calendar links for all major platforms
+    const calendarLinks = {
+      google: `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodedEventName}&dates=${startDateTime}/${endDateTime}&details=${encodedDescription}&location=${encodedLocation}`,
+      outlook: `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodedEventName}&startdt=${startDateTime}&enddt=${endDateTime}`,
+      apple: `data:text/calendar;charset=utf8,${icsContent}`,
+      yahoo: `https://calendar.yahoo.com/?v=60&view=d&type=20&title=${encodedEventName}&st=${startDateTime}&et=${endDateTime}`
+    };
+
+    // Or use EcoEvents API to generate links
+    const response = await fetch(
+      `https://api.ecoevents.com/v1/events/${eventId}/calendar-links`,
+      {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+      }
+    );
+    ```
+  </Step>
+
+  <Step title="Embed Calendar Widget">
+    Add an "Add to Calendar" button to your event page:
+
+    ```html
+    <!-- EcoEvents calendar widget -->
+    <div class="ecoevents-calendar-widget" 
+         data-event-id="event-123"
+         data-theme="light">
+    </div>
+    <script src="https://cdn.ecoevents.com/widgets/calendar.js"></script>
+    ```
+
+    The widget automatically generates links for all major calendar platforms.
+  </Step>
+</Steps>
+
+## Communication Platform Integrations
+
+<Steps>
+  <Step title="Slack Integration">
+    Connect EcoEvents to your Slack workspace:
+
+    1. Navigate to **Settings > Integrations > Slack**
+    2. Click **Add to Slack**
+    3. Select workspace and channel
+    4. Configure notification preferences
+
+    ```javascript
+    const slackConfig = {
+      workspace: 'your-workspace',
+      defaultChannel: '#events',
+      notifications: {
+        newRegistration: {
+          enabled: true,
+          channel: '#registrations',
+          message: '🎉 New registration: {{attendee.name}} for {{event.name}}'
+        },
+        eventPublished: {
+          enabled: true,
+          channel: '#events',
+          message: '📅 Event published: {{event.name}} - {{event.registrationUrl}}'
+        },
+        milestones: {
+          enabled: true,
+          channel: '#events',
+          thresholds: [25, 50, 75, 100], // percentage of capacity
+          message: '🎯 {{event.name}} reached {{milestone}}% capacity!'
+        },
+        sustainability: {
+          enabled: true,
+          channel: '#sustainability',
+          message: '♻️ Impact update: {{event.name}} is {{progress}}% toward carbon reduction goal'
+        }
+      },
+      commands: {
+        enabled: true,
+        prefix: '/ecoevents'
+      }
+    };
+    ```
+
+    <Tip>
+    Use Slack commands like `/ecoevents stats event-123` to get quick event statistics without leaving Slack.
+    </Tip>
+  </Step>
+
+  <Step title="Microsoft Teams Integration">
+    Connect to Microsoft Teams:
+
+    1. Click **Connect Microsoft Teams**
+    2. Sign in and authorize
+    3. Select team and channel
+    4. Configure notifications
+
+    Features:
+    - Adaptive cards for rich notifications
+    - Direct links to event management
+    - Team collaboration on event planning
+    - Automated meeting creation for virtual events
+  </Step>
+
+  <Step title="Discord Integration">
+    For community-focused events, connect Discord:
+
+    ```javascript
+    const discordConfig = {
+      serverId: 'your-server-id',
+      channels: {
+        announcements: 'channel-id-1',
+        registrations: 'channel-id-2',
+        support: 'channel-id-3'
+      },
+      roles: {
+        attendee: 'role-id-1',
+        vip: 'role-id-2',
+        speaker: 'role-id-3'
+      },
+      autoAssignRoles: true,
+      welcomeMessage: 'Welcome {{attendee.name}}! You\'re registered for {{event.name}}'
+    };
+    ```
+
+    Automatically assign roles to registered attendees and create dedicated event channels.
+  </Step>
+
+  <Step title="Email Marketing Platforms">
+    Sync attendees with email marketing tools:
+
+    **Mailchimp Integration**
+    ```javascript
+    const mailchimpConfig = {
+      apiKey: 'your-api-key',
+      listId: 'audience-id',
+      syncSettings: {
+        autoSync: true,
+        syncFrequency: 'real-time',
+        includeFields: ['name', 'email', 'company', 'ticketType'],
+        createTags: true,
+        tagPrefix: 'Event:'
+      },
+      campaigns: {
+        autoCreateForEvent: true,
+        templateId: 'template-123'
+      }
+    };
+    ```
+
+    **SendGrid Integration**
+    - Sync contact lists
+    - Trigger automated email campaigns
+    - Track email engagement
+    - A/B test event communications
+  </Step>
+</Steps>
+
+## Payment Processor Integrations
+
+<Steps>
+  <Step title="Stripe Integration">
+    Connect Stripe for payment processing:
+
+    1. Navigate to **Settings > Integrations > Payments**
+    2. Click **Connect Stripe**
+    3. Sign in to Stripe or create account
+    4. Complete OAuth flow
+
+    ```typescript
+    interface StripeConfig {
+      accountId: string;
+      publicKey: string;
+      webhookSecret: string;
+      features: {
+        paymentIntent: boolean;
+        subscriptions: boolean;
+        savePaymentMethods: boolean;
+      };
+      paymentMethods: Array<'card' | 'apple_pay' | 'google_pay' | 'ach'>;
+      currency: string;
+      statementDescriptor: string;
+    }
+
+    const stripeConfig: StripeConfig = {
+      accountId: 'acct_xxx',
+      publicKey: 'pk_live_xxx',
+      webhookSecret: 'whsec_xxx',
+      features: {
+        paymentIntent: true,
+        subscriptions: false,
+        savePaymentMethods: true
+      },
+      paymentMethods: ['card', 'apple_pay', 'google_pay'],
+      currency: 'usd',
+      statementDescriptor: 'ECOEVENTS*'
+    };
+    ```
+
+    Features:
+    - Credit/debit card payments
+    - Apple Pay and Google Pay
+    - ACH bank transfers
+    - Automatic refund processing
+    - Payment analytics and reporting
+  </Step>
+
+  <Step title="PayPal Integration">
+    Alternative payment processing:
+
+    1. Click **Connect PayPal**
+    2. Log in to PayPal business account
+    3. Grant permissions
+    4. Configure payment settings
+
+    Supports PayPal balance, credit cards through PayPal, and PayPal Credit.
+  </Step>
+
+  <Step title="Handle Payment Events">
+    Process payment webhooks:
+
+    ```javascript
+    async function handlePaymentWebhook(event) {
+      switch (event.type) {
+        case 'payment.succeeded':
+          await confirmRegistration(event.data.registrationId);
+          await sendReceipt(event.data.attendeeEmail);
+          await notifyOrganizer(event.data);
+          break;
+          
+        case 'payment.failed':
+          await notifyAttendee(event.data.attendeeEmail, 'payment_failed');
+          await createRetryAttempt(event.data.paymentIntentId);
+          break;
+          
+        case 'refund.processed':
+          await cancelRegistration(event.data.registrationId);
+          await sendRefundConfirmation(event.data.attendeeEmail);
+          break;
+      }
+    }
+    ```
+  </Step>
+</Steps>
+
+## CRM and Analytics Integrations
+
+<Steps>
+  <Step title="Salesforce Integration">
+    Sync attendees and events with Salesforce:
+
+    ```typescript
+    interface SalesforceMapping {
+      attendeeToLead: {
+        enabled: boolean;
+        fieldMappings: Record<string, string>;
+        autoConvert: boolean;
+      };
+      attendeeToContact: {
+        enabled: boolean;
+        fieldMappings: Record<string, string>;
+      };
+      eventToCampaign: {
+        enabled: boolean;
+        campaignType: string;
+      };
+      registrationToCampaignMember: {
+        enabled: boolean;
+        status: string;
+      };
+    }
+
+    const salesforceMapping: SalesforceMapping = {
+      attendeeToLead: {
+        enabled: true,
+        fieldMappings: {
+          'name': 'Name',
+          'email': 'Email',
+          'company': 'Company',
+          'phone': 'Phone',
+          'event.name': 'LeadSource'
+        },
+        autoConvert: false
+      },
+      attendeeToContact: {
+        enabled: true,
+        fieldMappings: {
+          'name': 'Name',
+          'email': 'Email',
+          'title': 'Title'
+        }
+      },
+      eventToCampaign: {
+        enabled: true,
+        campaignType: 'Event'
+      },
+      registrationToCampaignMember: {
+        enabled: true,
+        status: 'Registered'
+      }
+    };
+    ```
+  </Step>
+
+  <Step title="HubSpot Integration">
+    Connect with HubSpot CRM:
+
+    - Create contacts from attendees
+    - Track event registrations as deals
+    - Log event attendance as activities
+    - Trigger automated workflows
+    - Sync to marketing lists
+  </Step>
+
+  <Step title="Google Analytics Integration">
+    Track event page analytics:
+
+    ```html
+    <!-- Add to your event page -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+      
+      // Track event registration
+      gtag('event', 'registration', {
+        'event_id': '{{event.id}}',
+        'event_name': '{{event.name}}',
+        'ticket_type': '{{registration.ticketType}}',
+        'value': {{registration.amount}},
+        'currency': 'USD'
+      });
+    </script>
+    ```
+
+    Or use EcoEvents' automatic GA4 integration in **Settings > Integrations > Analytics**.
+  </Step>
+
+  <Step title="Mixpanel Integration">
+    Advanced event analytics:
+
+    ```javascript
+    // Automatically tracked events
+    const trackedEvents = [
+      'Event Viewed',
+      'Registration Started',
+      'Registration Completed',
+      'Ticket Selected',
+      'Payment Completed',
+      'Event Checked In',
+      'Session Attended',
+      'Sustainability Action Taken'
+    ];
+
+    // Custom properties
+    const eventProperties = {
+      eventId: 'event-123',
+      eventName: 'Green Tech Summit',
+      eventType: 'conference',
+      ticketType: 'early-bird',
+      sustainabilityScore: 85,
+      carbonFootprint: 42
+    };
+    ```
+  </Step>
+</Steps>
+
+## Sustainability Tool Integrations
+
+<Steps>
+  <Step title="Carbon Accounting Platforms">
+    Export impact data to carbon accounting tools:
+
+    ```javascript
+    // Example: Export to carbon accounting API
+    const carbonData = {
+      eventId: 'event-123',
+      eventName: 'Green Tech Summit',
+      startDate: '2026-06-15',
+      endDate: '2026-06-17',
+      emissions: {
+        scope1: 0, // Direct emissions
+        scope2: 3500, // Indirect from energy
+        scope3: 39000, // Other indirect (travel, etc.)
+        total: 42500
+      },
+      breakdown: {
+        travel: 25000,
+        venue: 8500,
+        catering: 6000,
+        waste: 2000,
+        materials: 1000
+      },
+      offsetsPurchased: 42500,
+      netEmissions: 0,
+      methodology: 'GHG Protocol',
+      verifiedBy: 'Third-Party Auditor'
+    };
+
+    await fetch('https://carbon-platform.com/api/v1/events', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer API_KEY',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(carbonData)
+    });
+    ```
+  </Step>
+
+  <Step title="ESG Reporting Tools">
+    Feed event sustainability data into ESG reporting:
+
+    - Automatic data export to ESG platforms
+    - Standardized reporting formats (GRI, SASB, TCFD)
+    - Audit trail and verification documents
+    - Integration with corporate sustainability dashboards
+  </Step>
+
+  <Step title="Offset Provider Integration">
+    Connect with carbon offset providers:
+
+    ```typescript
+    interface OffsetProviderConfig {
+      provider: 'goldstandard' | 'verra' | 'climateneutral' | 'custom';
+      apiKey: string;
+      projectPreferences: string[];
+      autoOffsetRules: {
+        enabled: boolean;
+        threshold: number; // minimum kg CO2e to offset
+        timing: 'immediate' | 'post-event';
+      };
+      certificateDelivery: 'email' | 'dashboard' | 'both';
+    }
+    ```
+
+    Automatically purchase and distribute offset certificates to attendees.
+  </Step>
+</Steps>
+
+## Building Custom Integrations
+
+<Steps>
+  <Step title="Use the EcoEvents API">
+    Build custom integrations with our REST API:
+
+    ```javascript
+    const EcoEventsAPI = {
+      baseURL: 'https://api.ecoevents.com/v1',
+      apiKey: 'your-api-key',
+
+      async getEvent(eventId) {
+        const response = await fetch(`${this.baseURL}/events/${eventId}`, {
+          headers: { 'Authorization': `Bearer ${this.apiKey}` }
+        });
+        return response.json();
+      },
+
+      async listAttendees(eventId, filters = {}) {
+        const params = new URLSearchParams(filters);
+        const response = await fetch(
+          `${this.baseURL}/events/${eventId}/attendees?${params}`,
+          { headers: { 'Authorization': `Bearer ${this.apiKey}` } }
+        );
+        return response.json();
+      },
+
+      async createRegistration(eventId, attendeeData) {
+        const response = await fetch(
+          `${this.baseURL}/events/${eventId}/registrations`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${this.apiKey}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(attendeeData)
+          }
+        );
+        return response.json();
+      },
+
+      async getImpactData(eventId) {
+        const response = await fetch(
+          `${this.baseURL}/events/${eventId}/impact`,
+          { headers: { 'Authorization': `Bearer ${this.apiKey}` } }
+        );
+        return response.json();
+      }
+    };
+    ```
+
+    See the complete [API Reference](/api/introduction) for all available endpoints.
+  </Step>
+
+  <Step title="Generate API Keys">
+    Create API keys in **Settings > API**:
+
+    1. Click **Generate New Key**
+    2. Name your key (e.g., "Production Integration")
+    3. Select permissions/scopes
+    4. Copy and securely store the key
+    5. Set expiration date (optional)
+
+    <Warning>
+    API keys grant access to your account data. Store them securely and never commit them to version control.
+    </Warning>
+  </Step>
+
+  <Step title="Use Zapier for No-Code Integration">
+    Connect EcoEvents to 5,000+ apps via Zapier:
+
+    1. Search for "EcoEvents" in Zapier
+    2. Choose a trigger (e.g., "New Registration")
+    3. Connect your EcoEvents account
+    4. Select an action in another app
+    5. Configure and test your Zap
+
+    Popular Zap templates:
+    - **New Registration → Add to Google Sheets**: Track registrations in spreadsheet
+    - **Event Published → Post to Twitter**: Auto-announce new events
+    - **Check-in Completed → Send SMS**: Welcome attendees via Twilio
+    - **Impact Report Generated → Save to Dropbox**: Archive sustainability reports
+  </Step>
+
+  <Step title="Embed Widgets">
+    Add EcoEvents functionality to your website:
+
+    ```html
+    <!-- Registration form widget -->
+    <div class="ecoevents-registration" 
+         data-event-id="event-123"
+         data-theme="light"
+         data-show-sustainability="true">
+    </div>
+    <script src="https://cdn.ecoevents.com/widgets/registration.js"></script>
+
+    <!-- Impact dashboard widget -->
+    <div class="ecoevents-impact-widget"
+         data-event-id="event-123"
+         data-metrics="carbon,waste,travel"
+         data-update-frequency="10000">
+    </div>
+    <script src="https://cdn.ecoevents.com/widgets/impact.js"></script>
+
+    <!-- Attendee counter widget -->
+    <div class="ecoevents-counter"
+         data-event-id="event-123"
+         data-style="progress-bar"
+         data-show-capacity="true">
+    </div>
+    <script src="https://cdn.ecoevents.com/widgets/counter.js"></script>
+    ```
+
+    Customize widget appearance with CSS or data attributes.
+  </Step>
+</Steps>
+
+## Integration Best Practices
+
+### Security
+- Use environment variables for API keys and secrets
+- Implement webhook signature verification
+- Use HTTPS for all API requests
+- Rotate API keys regularly
+- Follow principle of least privilege for permissions
+
+### Reliability
+- Implement retry logic with exponential backoff
+- Handle rate limits gracefully
+- Use idempotency keys for write operations
+- Log all integration errors
+- Set up monitoring and alerts
+
+### Performance
+- Cache frequently accessed data
+- Use pagination for large datasets
+- Batch operations when possible
+- Use webhooks instead of polling
+- Implement request queuing for high volume
+
+### Data Sync
+- Decide on sync direction (one-way or two-way)
+- Handle conflicts appropriately
+- Implement deduplication logic
+- Keep audit logs of sync operations
+- Test thoroughly before production use
+
+## Troubleshooting Common Issues
+
+### Webhook Not Receiving Events
+- Verify endpoint is publicly accessible
+- Check firewall and security group settings
+- Ensure you're returning 200 status code
+- Verify SSL certificate is valid
+- Check webhook logs for delivery attempts
+
+### API Authentication Failing
+- Confirm API key is active and not expired
+- Check that key has required permissions
+- Verify Authorization header format: `Bearer YOUR_KEY`
+- Ensure account subscription includes API access
+
+### Calendar Sync Not Working
+- Re-authorize the calendar connection
+- Check that calendar permissions are granted
+- Verify time zone settings match
+- Ensure calendar isn't at storage limit
+
+### Integration Rate Limited
+- Reduce request frequency
+- Implement exponential backoff
+- Consider upgrading to higher tier plan
+- Use webhooks instead of polling
+- Contact support for rate limit increase
+
+## Next Steps
+
+- Review the complete [API Documentation](/api/introduction)
+- Explore [webhook event reference](/api/webhooks)
+- Join the [developer community](https://community.ecoevents.com)
+- Check out [integration examples on GitHub](https://github.com/ecoevents/integrations)
+- Contact [integrations@ecoevents.com](mailto:integrations@ecoevents.com) for enterprise integration support
+
+For technical support, visit our [developer portal](https://developers.ecoevents.com) or contact the integration team.

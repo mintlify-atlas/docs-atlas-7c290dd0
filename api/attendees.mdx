@@ -1,0 +1,694 @@
+---
+title: 'Attendees API'
+description: 'Manage event attendees and registrations'
+icon: 'users'
+---
+
+## Overview
+
+The Attendees API allows you to manage event registrations and attendee information. Track participant details, dietary preferences, accessibility needs, and carbon offset contributions.
+
+## Authentication
+
+All API requests require an API key to be included in the header:
+
+```bash
+Authorization: Bearer YOUR_API_KEY
+```
+
+---
+
+## Create Attendee
+
+<Card title="POST /api/attendees" icon="user-plus">
+  Register a new attendee for an event.
+</Card>
+
+### Request
+
+<ParamField path="eventId" type="string" required>
+  The ID of the event the attendee is registering for
+</ParamField>
+
+<ParamField path="firstName" type="string" required>
+  Attendee's first name
+</ParamField>
+
+<ParamField path="lastName" type="string" required>
+  Attendee's last name
+</ParamField>
+
+<ParamField path="email" type="string" required>
+  Attendee's email address
+</ParamField>
+
+<ParamField path="phone" type="string">
+  Phone number with country code
+</ParamField>
+
+<ParamField path="company" type="string">
+  Company or organization name
+</ParamField>
+
+<ParamField path="title" type="string">
+  Job title or position
+</ParamField>
+
+<ParamField path="ticketType" type="string" required>
+  Type of ticket (e.g., "general", "vip", "early-bird", "speaker")
+</ParamField>
+
+<ParamField path="dietaryPreferences" type="array">
+  Array of dietary preferences (e.g., ["vegetarian", "vegan", "gluten-free", "halal", "kosher"])
+</ParamField>
+
+<ParamField path="accessibilityNeeds" type="object">
+  Accessibility requirements
+  
+  <Expandable title="properties">
+    <ParamField path="wheelchairAccess" type="boolean">
+      Requires wheelchair accessibility
+    </ParamField>
+    
+    <ParamField path="signLanguage" type="boolean">
+      Requires sign language interpretation
+    </ParamField>
+    
+    <ParamField path="visualAid" type="boolean">
+      Requires visual aids or large print materials
+    </ParamField>
+    
+    <ParamField path="other" type="string">
+      Other accessibility requirements
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="carbonOffset" type="object">
+  Carbon offset contribution details
+  
+  <Expandable title="properties">
+    <ParamField path="opted" type="boolean">
+      Whether attendee opted for carbon offset
+    </ParamField>
+    
+    <ParamField path="amount" type="number">
+      Contribution amount in USD
+    </ParamField>
+    
+    <ParamField path="travelDistance" type="number">
+      Estimated travel distance in kilometers
+    </ParamField>
+    
+    <ParamField path="travelMode" type="string">
+      Mode of transportation ("car", "flight", "train", "bus", "bike", "walk")
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="emergencyContact" type="object">
+  Emergency contact information
+  
+  <Expandable title="properties">
+    <ParamField path="name" type="string">
+      Emergency contact name
+    </ParamField>
+    
+    <ParamField path="phone" type="string">
+      Emergency contact phone number
+    </ParamField>
+    
+    <ParamField path="relationship" type="string">
+      Relationship to attendee
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField path="customFields" type="object">
+  Additional custom fields as key-value pairs
+</ParamField>
+
+### Response
+
+<ResponseField name="id" type="string">
+  Unique identifier for the attendee registration
+</ResponseField>
+
+<ResponseField name="eventId" type="string">
+  Associated event ID
+</ResponseField>
+
+<ResponseField name="firstName" type="string">
+  Attendee's first name
+</ResponseField>
+
+<ResponseField name="lastName" type="string">
+  Attendee's last name
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Attendee's email
+</ResponseField>
+
+<ResponseField name="phone" type="string">
+  Phone number
+</ResponseField>
+
+<ResponseField name="company" type="string">
+  Company name
+</ResponseField>
+
+<ResponseField name="title" type="string">
+  Job title
+</ResponseField>
+
+<ResponseField name="ticketType" type="string">
+  Ticket type
+</ResponseField>
+
+<ResponseField name="dietaryPreferences" type="array">
+  Dietary preferences
+</ResponseField>
+
+<ResponseField name="accessibilityNeeds" type="object">
+  Accessibility requirements
+</ResponseField>
+
+<ResponseField name="carbonOffset" type="object">
+  Carbon offset details
+</ResponseField>
+
+<ResponseField name="emergencyContact" type="object">
+  Emergency contact information
+</ResponseField>
+
+<ResponseField name="customFields" type="object">
+  Custom fields
+</ResponseField>
+
+<ResponseField name="registrationDate" type="string">
+  Timestamp when the registration was created
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Registration status ("confirmed", "pending", "cancelled", "checked-in")
+</ResponseField>
+
+<ResponseField name="qrCode" type="string">
+  URL to the attendee's QR code for check-in
+</ResponseField>
+
+<ResponseField name="confirmationCode" type="string">
+  Unique confirmation code
+</ResponseField>
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://api.ecoevents.com/api/attendees \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eventId": "evt_1a2b3c4d5e6f",
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com",
+    "phone": "+1-555-0123",
+    "company": "GreenTech Solutions",
+    "title": "Sustainability Director",
+    "ticketType": "general",
+    "dietaryPreferences": ["vegetarian"],
+    "accessibilityNeeds": {
+      "wheelchairAccess": false,
+      "signLanguage": false,
+      "visualAid": false
+    },
+    "carbonOffset": {
+      "opted": true,
+      "amount": 25.00,
+      "travelDistance": 150,
+      "travelMode": "car"
+    },
+    "emergencyContact": {
+      "name": "John Smith",
+      "phone": "+1-555-0124",
+      "relationship": "Spouse"
+    }
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.ecoevents.com/api/attendees', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    eventId: 'evt_1a2b3c4d5e6f',
+    firstName: 'Jane',
+    lastName: 'Smith',
+    email: 'jane.smith@example.com',
+    phone: '+1-555-0123',
+    company: 'GreenTech Solutions',
+    title: 'Sustainability Director',
+    ticketType: 'general',
+    dietaryPreferences: ['vegetarian'],
+    accessibilityNeeds: {
+      wheelchairAccess: false,
+      signLanguage: false,
+      visualAid: false
+    },
+    carbonOffset: {
+      opted: true,
+      amount: 25.00,
+      travelDistance: 150,
+      travelMode: 'car'
+    },
+    emergencyContact: {
+      name: 'John Smith',
+      phone: '+1-555-0124',
+      relationship: 'Spouse'
+    }
+  })
+});
+
+const attendee = await response.json();
+console.log(attendee);
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/attendees'
+headers = {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+}
+data = {
+    'eventId': 'evt_1a2b3c4d5e6f',
+    'firstName': 'Jane',
+    'lastName': 'Smith',
+    'email': 'jane.smith@example.com',
+    'phone': '+1-555-0123',
+    'company': 'GreenTech Solutions',
+    'title': 'Sustainability Director',
+    'ticketType': 'general',
+    'dietaryPreferences': ['vegetarian'],
+    'accessibilityNeeds': {
+        'wheelchairAccess': False,
+        'signLanguage': False,
+        'visualAid': False
+    },
+    'carbonOffset': {
+        'opted': True,
+        'amount': 25.00,
+        'travelDistance': 150,
+        'travelMode': 'car'
+    },
+    'emergencyContact': {
+        'name': 'John Smith',
+        'phone': '+1-555-0124',
+        'relationship': 'Spouse'
+    }
+}
+
+response = requests.post(url, headers=headers, json=data)
+attendee = response.json()
+print(attendee)
+```
+
+</CodeGroup>
+
+### Response Example
+
+```json
+{
+  "id": "att_7g8h9i0j1k2l",
+  "eventId": "evt_1a2b3c4d5e6f",
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "email": "jane.smith@example.com",
+  "phone": "+1-555-0123",
+  "company": "GreenTech Solutions",
+  "title": "Sustainability Director",
+  "ticketType": "general",
+  "dietaryPreferences": ["vegetarian"],
+  "accessibilityNeeds": {
+    "wheelchairAccess": false,
+    "signLanguage": false,
+    "visualAid": false
+  },
+  "carbonOffset": {
+    "opted": true,
+    "amount": 25.00,
+    "travelDistance": 150,
+    "travelMode": "car"
+  },
+  "emergencyContact": {
+    "name": "John Smith",
+    "phone": "+1-555-0124",
+    "relationship": "Spouse"
+  },
+  "registrationDate": "2026-03-05T11:15:00Z",
+  "status": "confirmed",
+  "qrCode": "https://api.ecoevents.com/qr/att_7g8h9i0j1k2l",
+  "confirmationCode": "ECO-2026-JANE-SMITH-7G8H"
+}
+```
+
+---
+
+## List Attendees
+
+<Card title="GET /api/attendees" icon="list">
+  Retrieve a paginated list of attendees with optional filtering.
+</Card>
+
+### Query Parameters
+
+<ParamField query="eventId" type="string">
+  Filter by event ID
+</ParamField>
+
+<ParamField query="page" type="integer" default="1">
+  Page number for pagination
+</ParamField>
+
+<ParamField query="limit" type="integer" default="20">
+  Number of attendees per page (max 100)
+</ParamField>
+
+<ParamField query="status" type="string">
+  Filter by registration status ("confirmed", "pending", "cancelled", "checked-in")
+</ParamField>
+
+<ParamField query="ticketType" type="string">
+  Filter by ticket type
+</ParamField>
+
+<ParamField query="search" type="string">
+  Search by name, email, or company
+</ParamField>
+
+<ParamField query="carbonOffset" type="boolean">
+  Filter by carbon offset participation (true/false)
+</ParamField>
+
+<ParamField query="sortBy" type="string" default="registrationDate">
+  Field to sort by ("registrationDate", "firstName", "lastName", "company")
+</ParamField>
+
+<ParamField query="order" type="string" default="desc">
+  Sort order ("asc" or "desc")
+</ParamField>
+
+### Response
+
+<ResponseField name="attendees" type="array">
+  Array of attendee objects
+</ResponseField>
+
+<ResponseField name="pagination" type="object">
+  Pagination information
+  
+  <Expandable title="properties">
+    <ResponseField name="page" type="integer">
+      Current page number
+    </ResponseField>
+    <ResponseField name="limit" type="integer">
+      Attendees per page
+    </ResponseField>
+    <ResponseField name="total" type="integer">
+      Total number of attendees
+    </ResponseField>
+    <ResponseField name="totalPages" type="integer">
+      Total number of pages
+    </ResponseField>
+    <ResponseField name="hasNext" type="boolean">
+      Whether there is a next page
+    </ResponseField>
+    <ResponseField name="hasPrev" type="boolean">
+      Whether there is a previous page
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET "https://api.ecoevents.com/api/attendees?eventId=evt_1a2b3c4d5e6f&status=confirmed&page=1&limit=10" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const params = new URLSearchParams({
+  eventId: 'evt_1a2b3c4d5e6f',
+  status: 'confirmed',
+  page: '1',
+  limit: '10'
+});
+
+const response = await fetch(`https://api.ecoevents.com/api/attendees?${params}`, {
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/attendees'
+headers = {'Authorization': 'Bearer YOUR_API_KEY'}
+params = {
+    'eventId': 'evt_1a2b3c4d5e6f',
+    'status': 'confirmed',
+    'page': 1,
+    'limit': 10
+}
+
+response = requests.get(url, headers=headers, params=params)
+data = response.json()
+print(data)
+```
+
+</CodeGroup>
+
+---
+
+## Get Attendee
+
+<Card title="GET /api/attendees/:id" icon="user">
+  Retrieve a specific attendee by ID.
+</Card>
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the attendee
+</ParamField>
+
+### Response
+
+Returns the full attendee object with all registration details.
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET https://api.ecoevents.com/api/attendees/att_7g8h9i0j1k2l \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.ecoevents.com/api/attendees/att_7g8h9i0j1k2l', {
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+});
+
+const attendee = await response.json();
+console.log(attendee);
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/attendees/att_7g8h9i0j1k2l'
+headers = {'Authorization': 'Bearer YOUR_API_KEY'}
+
+response = requests.get(url, headers=headers)
+attendee = response.json()
+print(attendee)
+```
+
+</CodeGroup>
+
+---
+
+## Update Attendee
+
+<Card title="PUT /api/attendees/:id" icon="user-pen">
+  Update attendee information. All fields are optional.
+</Card>
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the attendee to update
+</ParamField>
+
+### Request
+
+Accepts the same parameters as Create Attendee, but all fields are optional. Only include fields you want to update.
+
+<ParamField path="firstName" type="string">
+  Updated first name
+</ParamField>
+
+<ParamField path="lastName" type="string">
+  Updated last name
+</ParamField>
+
+<ParamField path="email" type="string">
+  Updated email address
+</ParamField>
+
+<ParamField path="phone" type="string">
+  Updated phone number
+</ParamField>
+
+<ParamField path="company" type="string">
+  Updated company name
+</ParamField>
+
+<ParamField path="title" type="string">
+  Updated job title
+</ParamField>
+
+<ParamField path="ticketType" type="string">
+  Updated ticket type
+</ParamField>
+
+<ParamField path="dietaryPreferences" type="array">
+  Updated dietary preferences
+</ParamField>
+
+<ParamField path="accessibilityNeeds" type="object">
+  Updated accessibility requirements
+</ParamField>
+
+<ParamField path="carbonOffset" type="object">
+  Updated carbon offset details
+</ParamField>
+
+<ParamField path="emergencyContact" type="object">
+  Updated emergency contact
+</ParamField>
+
+<ParamField path="status" type="string">
+  Updated registration status ("confirmed", "pending", "cancelled", "checked-in")
+</ParamField>
+
+<ParamField path="customFields" type="object">
+  Updated custom fields
+</ParamField>
+
+### Response
+
+Returns the updated attendee object.
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X PUT https://api.ecoevents.com/api/attendees/att_7g8h9i0j1k2l \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "status": "checked-in",
+    "dietaryPreferences": ["vegetarian", "gluten-free"]
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.ecoevents.com/api/attendees/att_7g8h9i0j1k2l', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    status: 'checked-in',
+    dietaryPreferences: ['vegetarian', 'gluten-free']
+  })
+});
+
+const updatedAttendee = await response.json();
+console.log(updatedAttendee);
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/attendees/att_7g8h9i0j1k2l'
+headers = {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+}
+data = {
+    'status': 'checked-in',
+    'dietaryPreferences': ['vegetarian', 'gluten-free']
+}
+
+response = requests.put(url, headers=headers, json=data)
+updated_attendee = response.json()
+print(updated_attendee)
+```
+
+</CodeGroup>
+
+---
+
+## Error Responses
+
+All endpoints may return the following error responses:
+
+<ResponseField name="error" type="object">
+  Error details
+  
+  <Expandable title="properties">
+    <ResponseField name="code" type="string">
+      Error code (e.g., "INVALID_REQUEST", "NOT_FOUND", "DUPLICATE_REGISTRATION")
+    </ResponseField>
+    <ResponseField name="message" type="string">
+      Human-readable error message
+    </ResponseField>
+    <ResponseField name="details" type="object">
+      Additional error context (optional)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Common Error Codes
+
+| Status Code | Error Code | Description |
+|-------------|------------|-------------|
+| 400 | INVALID_REQUEST | Invalid request parameters or body |
+| 400 | EVENT_FULL | Event has reached maximum capacity |
+| 401 | UNAUTHORIZED | Missing or invalid API key |
+| 403 | FORBIDDEN | Insufficient permissions |
+| 404 | NOT_FOUND | Attendee or event not found |
+| 409 | DUPLICATE_REGISTRATION | Attendee already registered for this event |
+| 429 | RATE_LIMIT_EXCEEDED | Too many requests |
+| 500 | INTERNAL_ERROR | Server error |

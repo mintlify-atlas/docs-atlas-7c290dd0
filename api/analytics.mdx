@@ -1,0 +1,708 @@
+---
+title: 'Analytics API'
+description: 'Access sustainability metrics and event analytics'
+icon: 'chart-line'
+---
+
+## Overview
+
+The Analytics API provides comprehensive insights into event performance, sustainability metrics, carbon footprint tracking, and trend analysis. Use these endpoints to monitor environmental impact and optimize future events.
+
+## Authentication
+
+All API requests require an API key to be included in the header:
+
+```bash
+Authorization: Bearer YOUR_API_KEY
+```
+
+---
+
+## Get Sustainability Metrics
+
+<Card title="GET /api/analytics/sustainability" icon="leaf">
+  Retrieve comprehensive sustainability metrics across all events or filtered by date range.
+</Card>
+
+### Query Parameters
+
+<ParamField query="startDate" type="string">
+  Start date for metrics calculation (ISO 8601 format)
+</ParamField>
+
+<ParamField query="endDate" type="string">
+  End date for metrics calculation (ISO 8601 format)
+</ParamField>
+
+<ParamField query="eventIds" type="string">
+  Comma-separated list of event IDs to include in metrics
+</ParamField>
+
+<ParamField query="granularity" type="string" default="total">
+  Data granularity ("total", "daily", "weekly", "monthly")
+</ParamField>
+
+### Response
+
+<ResponseField name="carbonFootprint" type="object">
+  Total carbon footprint metrics
+  
+  <Expandable title="properties">
+    <ResponseField name="totalEmissions" type="number">
+      Total CO2 emissions in metric tons
+    </ResponseField>
+    <ResponseField name="emissionsPerAttendee" type="number">
+      Average emissions per attendee in kg CO2
+    </ResponseField>
+    <ResponseField name="breakdown" type="object">
+      Emissions breakdown by category
+      <Expandable title="properties">
+        <ResponseField name="travel" type="number">
+          Emissions from attendee travel (kg CO2)
+        </ResponseField>
+        <ResponseField name="venue" type="number">
+          Emissions from venue energy use (kg CO2)
+        </ResponseField>
+        <ResponseField name="catering" type="number">
+          Emissions from food and beverages (kg CO2)
+        </ResponseField>
+        <ResponseField name="materials" type="number">
+          Emissions from event materials (kg CO2)
+        </ResponseField>
+        <ResponseField name="waste" type="number">
+          Emissions from waste disposal (kg CO2)
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="offsetTotal" type="number">
+      Total carbon offset contributions in metric tons
+    </ResponseField>
+    <ResponseField name="offsetPercentage" type="number">
+      Percentage of emissions offset
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="wasteManagement" type="object">
+  Waste reduction and recycling metrics
+  
+  <Expandable title="properties">
+    <ResponseField name="totalWaste" type="number">
+      Total waste generated in kg
+    </ResponseField>
+    <ResponseField name="recycled" type="number">
+      Amount recycled in kg
+    </ResponseField>
+    <ResponseField name="composted" type="number">
+      Amount composted in kg
+    </ResponseField>
+    <ResponseField name="landfill" type="number">
+      Amount sent to landfill in kg
+    </ResponseField>
+    <ResponseField name="diversionRate" type="number">
+      Waste diversion rate as percentage
+    </ResponseField>
+    <ResponseField name="wastePerAttendee" type="number">
+      Average waste per attendee in kg
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="energyConsumption" type="object">
+  Energy usage metrics
+  
+  <Expandable title="properties">
+    <ResponseField name="totalEnergy" type="number">
+      Total energy consumed in kWh
+    </ResponseField>
+    <ResponseField name="renewablePercentage" type="number">
+      Percentage from renewable sources
+    </ResponseField>
+    <ResponseField name="energyPerAttendee" type="number">
+      Average energy per attendee in kWh
+    </ResponseField>
+    <ResponseField name="breakdown" type="object">
+      Energy breakdown by source
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="sustainablePractices" type="object">
+  Adoption of sustainable practices
+  
+  <Expandable title="properties">
+    <ResponseField name="localSourcing" type="number">
+      Percentage of events using local sourcing
+    </ResponseField>
+    <ResponseField name="digitalFirst" type="number">
+      Percentage of events using digital materials
+    </ResponseField>
+    <ResponseField name="publicTransit" type="number">
+      Percentage of attendees using public transit
+    </ResponseField>
+    <ResponseField name="vegetarianOptions" type="number">
+      Percentage of meals that are vegetarian/vegan
+    </ResponseField>
+    <ResponseField name="reusableMaterials" type="number">
+      Percentage using reusable materials
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="certifications" type="object">
+  Sustainability certifications achieved
+  
+  <Expandable title="properties">
+    <ResponseField name="iso20121" type="integer">
+      Number of ISO 20121 certified events
+    </ResponseField>
+    <ResponseField name="leedCertified" type="integer">
+      Number of events in LEED certified venues
+    </ResponseField>
+    <ResponseField name="carbonNeutral" type="integer">
+      Number of carbon neutral events
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="trends" type="array">
+  Historical trend data (if granularity is not "total")
+</ResponseField>
+
+<ResponseField name="summary" type="object">
+  Summary statistics
+  
+  <Expandable title="properties">
+    <ResponseField name="totalEvents" type="integer">
+      Total number of events analyzed
+    </ResponseField>
+    <ResponseField name="totalAttendees" type="integer">
+      Total number of attendees
+    </ResponseField>
+    <ResponseField name="dateRange" type="object">
+      Date range of analysis
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET "https://api.ecoevents.com/api/analytics/sustainability?startDate=2026-01-01T00:00:00Z&endDate=2026-12-31T23:59:59Z&granularity=monthly" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const params = new URLSearchParams({
+  startDate: '2026-01-01T00:00:00Z',
+  endDate: '2026-12-31T23:59:59Z',
+  granularity: 'monthly'
+});
+
+const response = await fetch(`https://api.ecoevents.com/api/analytics/sustainability?${params}`, {
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+});
+
+const metrics = await response.json();
+console.log(metrics);
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/analytics/sustainability'
+headers = {'Authorization': 'Bearer YOUR_API_KEY'}
+params = {
+    'startDate': '2026-01-01T00:00:00Z',
+    'endDate': '2026-12-31T23:59:59Z',
+    'granularity': 'monthly'
+}
+
+response = requests.get(url, headers=headers, params=params)
+metrics = response.json()
+print(metrics)
+```
+
+</CodeGroup>
+
+### Response Example
+
+```json
+{
+  "carbonFootprint": {
+    "totalEmissions": 45.8,
+    "emissionsPerAttendee": 91.6,
+    "breakdown": {
+      "travel": 25000,
+      "venue": 12000,
+      "catering": 6000,
+      "materials": 2500,
+      "waste": 300
+    },
+    "offsetTotal": 40.2,
+    "offsetPercentage": 87.8
+  },
+  "wasteManagement": {
+    "totalWaste": 850,
+    "recycled": 420,
+    "composted": 280,
+    "landfill": 150,
+    "diversionRate": 82.4,
+    "wastePerAttendee": 1.7
+  },
+  "energyConsumption": {
+    "totalEnergy": 2400,
+    "renewablePercentage": 75,
+    "energyPerAttendee": 4.8,
+    "breakdown": {
+      "solar": 1200,
+      "wind": 600,
+      "grid": 600
+    }
+  },
+  "sustainablePractices": {
+    "localSourcing": 85,
+    "digitalFirst": 92,
+    "publicTransit": 45,
+    "vegetarianOptions": 68,
+    "reusableMaterials": 78
+  },
+  "certifications": {
+    "iso20121": 3,
+    "leedCertified": 5,
+    "carbonNeutral": 4
+  },
+  "summary": {
+    "totalEvents": 8,
+    "totalAttendees": 2450,
+    "dateRange": {
+      "start": "2026-01-01T00:00:00Z",
+      "end": "2026-12-31T23:59:59Z"
+    }
+  }
+}
+```
+
+---
+
+## Get Event Analytics
+
+<Card title="GET /api/analytics/events/:id" icon="chart-simple">
+  Retrieve detailed analytics for a specific event.
+</Card>
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the event
+</ParamField>
+
+### Response
+
+<ResponseField name="eventId" type="string">
+  Event identifier
+</ResponseField>
+
+<ResponseField name="eventName" type="string">
+  Event name
+</ResponseField>
+
+<ResponseField name="attendance" type="object">
+  Attendance metrics
+  
+  <Expandable title="properties">
+    <ResponseField name="registered" type="integer">
+      Total registrations
+    </ResponseField>
+    <ResponseField name="checkedIn" type="integer">
+      Number of attendees checked in
+    </ResponseField>
+    <ResponseField name="noShow" type="integer">
+      Number of no-shows
+    </ResponseField>
+    <ResponseField name="cancelled" type="integer">
+      Cancelled registrations
+    </ResponseField>
+    <ResponseField name="attendanceRate" type="number">
+      Attendance rate as percentage
+    </ResponseField>
+    <ResponseField name="capacityUtilization" type="number">
+      Percentage of capacity used
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="demographics" type="object">
+  Attendee demographics
+  
+  <Expandable title="properties">
+    <ResponseField name="ticketTypes" type="object">
+      Breakdown by ticket type
+    </ResponseField>
+    <ResponseField name="companies" type="array">
+      Top companies represented
+    </ResponseField>
+    <ResponseField name="locations" type="object">
+      Geographic distribution
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="sustainability" type="object">
+  Event-specific sustainability metrics
+  
+  <Expandable title="properties">
+    <ResponseField name="carbonFootprint" type="number">
+      Total emissions in kg CO2
+    </ResponseField>
+    <ResponseField name="carbonOffsetParticipation" type="number">
+      Percentage participating in offset program
+    </ResponseField>
+    <ResponseField name="wasteGenerated" type="number">
+      Total waste in kg
+    </ResponseField>
+    <ResponseField name="recyclingRate" type="number">
+      Recycling rate as percentage
+    </ResponseField>
+    <ResponseField name="sustainabilityScore" type="number">
+      Overall sustainability score (0-100)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="engagement" type="object">
+  Engagement metrics
+  
+  <Expandable title="properties">
+    <ResponseField name="averageSessionDuration" type="number">
+      Average time spent at event in minutes
+    </ResponseField>
+    <ResponseField name="sessionsAttended" type="object">
+      Session attendance breakdown
+    </ResponseField>
+    <ResponseField name="networkingConnections" type="integer">
+      Number of networking connections made
+    </ResponseField>
+    <ResponseField name="appDownloads" type="integer">
+      Event app downloads
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="financial" type="object">
+  Financial metrics
+  
+  <Expandable title="properties">
+    <ResponseField name="totalRevenue" type="number">
+      Total revenue in USD
+    </ResponseField>
+    <ResponseField name="revenuePerAttendee" type="number">
+      Average revenue per attendee
+    </ResponseField>
+    <ResponseField name="ticketSales" type="object">
+      Sales breakdown by ticket type
+    </ResponseField>
+    <ResponseField name="refunds" type="number">
+      Total refunds issued
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="feedback" type="object">
+  Attendee feedback summary
+  
+  <Expandable title="properties">
+    <ResponseField name="averageRating" type="number">
+      Average event rating (1-5)
+    </ResponseField>
+    <ResponseField name="responseRate" type="number">
+      Survey response rate as percentage
+    </ResponseField>
+    <ResponseField name="nps" type="number">
+      Net Promoter Score
+    </ResponseField>
+    <ResponseField name="topComments" type="array">
+      Most common feedback themes
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET https://api.ecoevents.com/api/analytics/events/evt_1a2b3c4d5e6f \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.ecoevents.com/api/analytics/events/evt_1a2b3c4d5e6f', {
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+});
+
+const analytics = await response.json();
+console.log(analytics);
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/analytics/events/evt_1a2b3c4d5e6f'
+headers = {'Authorization': 'Bearer YOUR_API_KEY'}
+
+response = requests.get(url, headers=headers)
+analytics = response.json()
+print(analytics)
+```
+
+</CodeGroup>
+
+---
+
+## Get Trend Data
+
+<Card title="GET /api/analytics/trends" icon="chart-line">
+  Retrieve trend analysis and comparative metrics across events.
+</Card>
+
+### Query Parameters
+
+<ParamField query="metric" type="string" required>
+  Metric to analyze ("carbon_emissions", "attendance", "waste_reduction", "energy_usage", "offset_participation")
+</ParamField>
+
+<ParamField query="startDate" type="string" required>
+  Start date for trend analysis (ISO 8601 format)
+</ParamField>
+
+<ParamField query="endDate" type="string" required>
+  End date for trend analysis (ISO 8601 format)
+</ParamField>
+
+<ParamField query="granularity" type="string" default="monthly">
+  Time granularity ("daily", "weekly", "monthly", "quarterly")
+</ParamField>
+
+<ParamField query="category" type="string">
+  Filter by event category
+</ParamField>
+
+<ParamField query="comparison" type="boolean" default="false">
+  Include industry benchmark comparison
+</ParamField>
+
+### Response
+
+<ResponseField name="metric" type="string">
+  The metric being analyzed
+</ResponseField>
+
+<ResponseField name="dateRange" type="object">
+  Date range of analysis
+  
+  <Expandable title="properties">
+    <ResponseField name="start" type="string">
+      Start date
+    </ResponseField>
+    <ResponseField name="end" type="string">
+      End date
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="dataPoints" type="array">
+  Time series data points
+  
+  <Expandable title="properties">
+    <ResponseField name="date" type="string">
+      Data point date
+    </ResponseField>
+    <ResponseField name="value" type="number">
+      Metric value
+    </ResponseField>
+    <ResponseField name="eventCount" type="integer">
+      Number of events in period
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="statistics" type="object">
+  Statistical analysis
+  
+  <Expandable title="properties">
+    <ResponseField name="average" type="number">
+      Average value across period
+    </ResponseField>
+    <ResponseField name="median" type="number">
+      Median value
+    </ResponseField>
+    <ResponseField name="min" type="number">
+      Minimum value
+    </ResponseField>
+    <ResponseField name="max" type="number">
+      Maximum value
+    </ResponseField>
+    <ResponseField name="standardDeviation" type="number">
+      Standard deviation
+    </ResponseField>
+    <ResponseField name="trend" type="string">
+      Trend direction ("increasing", "decreasing", "stable")
+    </ResponseField>
+    <ResponseField name="changePercentage" type="number">
+      Percentage change over period
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="benchmark" type="object">
+  Industry benchmark comparison (if requested)
+  
+  <Expandable title="properties">
+    <ResponseField name="industryAverage" type="number">
+      Industry average for metric
+    </ResponseField>
+    <ResponseField name="percentile" type="number">
+      Your percentile ranking (0-100)
+    </ResponseField>
+    <ResponseField name="comparison" type="string">
+      Performance vs industry ("above", "average", "below")
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="insights" type="array">
+  AI-generated insights and recommendations
+</ResponseField>
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET "https://api.ecoevents.com/api/analytics/trends?metric=carbon_emissions&startDate=2026-01-01T00:00:00Z&endDate=2026-12-31T23:59:59Z&granularity=monthly&comparison=true" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const params = new URLSearchParams({
+  metric: 'carbon_emissions',
+  startDate: '2026-01-01T00:00:00Z',
+  endDate: '2026-12-31T23:59:59Z',
+  granularity: 'monthly',
+  comparison: 'true'
+});
+
+const response = await fetch(`https://api.ecoevents.com/api/analytics/trends?${params}`, {
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+});
+
+const trends = await response.json();
+console.log(trends);
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/analytics/trends'
+headers = {'Authorization': 'Bearer YOUR_API_KEY'}
+params = {
+    'metric': 'carbon_emissions',
+    'startDate': '2026-01-01T00:00:00Z',
+    'endDate': '2026-12-31T23:59:59Z',
+    'granularity': 'monthly',
+    'comparison': True
+}
+
+response = requests.get(url, headers=headers, params=params)
+trends = response.json()
+print(trends)
+```
+
+</CodeGroup>
+
+### Response Example
+
+```json
+{
+  "metric": "carbon_emissions",
+  "dateRange": {
+    "start": "2026-01-01T00:00:00Z",
+    "end": "2026-12-31T23:59:59Z"
+  },
+  "dataPoints": [
+    {
+      "date": "2026-01",
+      "value": 5200,
+      "eventCount": 2
+    },
+    {
+      "date": "2026-02",
+      "value": 4800,
+      "eventCount": 1
+    }
+  ],
+  "statistics": {
+    "average": 5725,
+    "median": 5600,
+    "min": 3200,
+    "max": 8500,
+    "standardDeviation": 1250,
+    "trend": "decreasing",
+    "changePercentage": -12.5
+  },
+  "benchmark": {
+    "industryAverage": 6500,
+    "percentile": 72,
+    "comparison": "above"
+  },
+  "insights": [
+    "Carbon emissions decreased by 12.5% over the year",
+    "Your events produce 11.9% less emissions than industry average",
+    "Consider increasing renewable energy usage to reach top 10% percentile"
+  ]
+}
+```
+
+---
+
+## Error Responses
+
+All endpoints may return the following error responses:
+
+<ResponseField name="error" type="object">
+  Error details
+  
+  <Expandable title="properties">
+    <ResponseField name="code" type="string">
+      Error code (e.g., "INVALID_REQUEST", "INSUFFICIENT_DATA", "UNAUTHORIZED")
+    </ResponseField>
+    <ResponseField name="message" type="string">
+      Human-readable error message
+    </ResponseField>
+    <ResponseField name="details" type="object">
+      Additional error context (optional)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Common Error Codes
+
+| Status Code | Error Code | Description |
+|-------------|------------|-------------|
+| 400 | INVALID_REQUEST | Invalid request parameters |
+| 400 | INVALID_DATE_RANGE | Invalid or unsupported date range |
+| 400 | INSUFFICIENT_DATA | Not enough data for requested analysis |
+| 401 | UNAUTHORIZED | Missing or invalid API key |
+| 403 | FORBIDDEN | Insufficient permissions |
+| 404 | NOT_FOUND | Event not found |
+| 429 | RATE_LIMIT_EXCEEDED | Too many requests |
+| 500 | INTERNAL_ERROR | Server error |

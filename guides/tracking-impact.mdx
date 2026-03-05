@@ -1,0 +1,722 @@
+---
+title: Tracking Impact
+description: Comprehensive guide to measuring carbon footprint, setting reduction targets, tracking progress, and generating sustainability reports
+---
+
+Measure, monitor, and report on your event's environmental impact with EcoEvents' comprehensive sustainability tracking tools.
+
+## Overview
+
+EcoEvents provides robust tools to:
+- Calculate your event's carbon footprint across all activities
+- Set and track carbon reduction targets
+- Monitor progress in real-time
+- Generate detailed sustainability reports
+- Benchmark against industry standards
+- Earn sustainability certifications
+
+<Note>
+All carbon calculations use internationally recognized standards including the GHG Protocol and ISO 14064. Our methodology is third-party verified annually.
+</Note>
+
+## Understanding Carbon Footprint Calculation
+
+EcoEvents calculates carbon emissions across five main categories:
+
+### 1. Attendee Travel
+- Transportation mode (car, train, plane, bike, walk)
+- Distance traveled
+- Vehicle efficiency (for cars)
+- Occupancy (carpooling)
+
+### 2. Venue Energy
+- Electricity consumption
+- Heating and cooling
+- Lighting
+- AV equipment
+- Energy source (renewable vs. fossil fuels)
+
+### 3. Catering & Food
+- Food miles (distance ingredients traveled)
+- Meal types (meat, vegetarian, vegan)
+- Food waste generated
+- Packaging materials
+
+### 4. Waste Management
+- Total waste generated
+- Waste diverted from landfill (recycling, composting)
+- Single-use plastics
+
+### 5. Materials & Production
+- Printed materials
+- Signage and decorations
+- Promotional items
+- Digital alternatives
+
+```typescript
+interface CarbonFootprint {
+  total: number; // kg CO2e
+  breakdown: {
+    travel: number;
+    venue: number;
+    catering: number;
+    waste: number;
+    materials: number;
+  };
+  perAttendee: number;
+  reductionFromBaseline: number; // percentage
+  offsetPurchased: number; // kg CO2e
+  netEmissions: number; // kg CO2e
+}
+```
+
+## Setting Up Impact Tracking
+
+<Steps>
+  <Step title="Access Impact Dashboard">
+    Navigate to your event and select the **Impact** tab. This is your central hub for all sustainability metrics.
+  </Step>
+
+  <Step title="Configure Tracking Settings">
+    Click **Settings** to configure what you want to track:
+
+    ```javascript
+    const trackingConfig = {
+      enabled: {
+        travel: true,
+        venue: true,
+        catering: true,
+        waste: true,
+        materials: true
+      },
+      dataCollection: {
+        surveyAttendees: true,
+        automaticCalculation: true,
+        venueIntegration: true,
+        cateringPartnerData: true
+      },
+      reportingFrequency: 'daily', // or 'weekly', 'real-time'
+      benchmarking: {
+        enabled: true,
+        compareToIndustry: true,
+        compareToOwnEvents: true
+      }
+    };
+    ```
+
+    <Tip>
+    Enable all tracking categories for the most comprehensive impact assessment. You can always exclude categories from final reports if needed.
+    </Tip>
+  </Step>
+
+  <Step title="Set Up Data Collection">
+    Configure how data will be collected:
+
+    **Attendee Travel Data**
+    - Add travel questions to registration form
+    - Send pre-event travel survey
+    - Enable location-based estimation
+    - Integrate with transportation partners
+
+    **Venue Data**
+    - Request energy bills from venue
+    - Install temporary energy monitors
+    - Use venue-provided sustainability data
+    - Apply industry averages (least accurate)
+
+    **Catering Data**
+    - Coordinate with caterer for ingredient sourcing info
+    - Track meal choices during registration
+    - Measure food waste post-event
+    - Document sustainable catering practices
+  </Step>
+
+  <Step title="Establish Baseline">
+    Set a baseline for comparison:
+
+    - **Previous Event**: Compare to your last similar event
+    - **Industry Average**: Compare to events of similar size and type
+    - **Custom Baseline**: Set your own target
+
+    ```javascript
+    const baseline = {
+      type: 'previous-event',
+      eventId: 'event-2025-123',
+      totalEmissions: 50000, // kg CO2e
+      attendeeCount: 500,
+      perAttendeeEmissions: 100 // kg CO2e
+    };
+    ```
+  </Step>
+</Steps>
+
+## Setting Carbon Reduction Targets
+
+<Steps>
+  <Step title="Define Reduction Goals">
+    Navigate to **Impact > Goals** and set your targets:
+
+    ```typescript
+    interface ReductionTargets {
+      overall: number; // percentage reduction from baseline
+      byCategory: {
+        travel?: number;
+        venue?: number;
+        catering?: number;
+        waste?: number;
+        materials?: number;
+      };
+      timeline: 'this-event' | 'year' | 'multi-year';
+      certificationGoal?: 'ISO20121' | 'CarbonNeutral' | 'NetZero';
+    }
+
+    const targets: ReductionTargets = {
+      overall: 40, // 40% reduction
+      byCategory: {
+        travel: 30,
+        venue: 50,
+        catering: 35,
+        waste: 60,
+        materials: 80
+      },
+      timeline: 'this-event',
+      certificationGoal: 'CarbonNeutral'
+    };
+    ```
+  </Step>
+
+  <Step title="Create Action Plans">
+    For each category, define specific actions to achieve targets:
+
+    **Travel Reduction Actions**
+    - Promote public transportation with transit passes
+    - Offer carpool matching
+    - Provide bike parking and incentives
+    - Choose centrally located venues
+    - Offer virtual attendance option
+
+    **Venue Energy Reduction**
+    - Select venues with renewable energy
+    - Optimize HVAC schedules
+    - Use natural lighting where possible
+    - Choose energy-efficient AV equipment
+
+    **Catering Improvements**
+    - Increase plant-based options
+    - Source local, seasonal ingredients
+    - Eliminate food waste through portion management
+    - Use compostable serving materials
+
+    **Waste Minimization**
+    - Go paperless for all materials
+    - Provide clear recycling/composting stations
+    - Eliminate single-use plastics
+    - Encourage reusable water bottles
+
+    ```javascript
+    const actionPlan = [
+      {
+        category: 'travel',
+        action: 'Provide free public transit passes',
+        expectedReduction: 8000, // kg CO2e
+        status: 'in-progress',
+        cost: 5000
+      },
+      {
+        category: 'venue',
+        action: 'Select 100% renewable energy venue',
+        expectedReduction: 12000,
+        status: 'completed',
+        cost: 0
+      },
+      {
+        category: 'catering',
+        action: '75% plant-based menu',
+        expectedReduction: 6000,
+        status: 'planned',
+        cost: -500 // cost savings
+      }
+    ];
+    ```
+  </Step>
+
+  <Step title="Configure Attendee Engagement">
+    Engage attendees in achieving your goals:
+
+    - Display real-time progress at event
+    - Send sustainability tips before event
+    - Offer incentives for green choices
+    - Gamify sustainability actions
+    - Recognize top contributors
+
+    <Note>
+    Events with active attendee engagement achieve 2-3x higher carbon reduction rates.
+    </Note>
+  </Step>
+
+  <Step title="Set Up Carbon Offsetting">
+    Offer carbon offset options:
+
+    - Calculate remaining emissions
+    - Partner with verified offset programs
+    - Offer offset purchase during registration
+    - Automatically offset organizational footprint
+    - Track offset certificates
+
+    ```javascript
+    const offsetConfig = {
+      enabled: true,
+      providers: ['goldstandard', 'verra', 'climateneutral'],
+      projectTypes: ['renewable-energy', 'reforestation', 'carbon-capture'],
+      pricing: 'market-rate', // or 'fixed'
+      automaticOffset: {
+        enabled: true,
+        scope: 'all-emissions' // or 'unachieved-reductions'
+      },
+      attendeeOptIn: true
+    };
+    ```
+  </Step>
+</Steps>
+
+## Monitoring Progress in Real-Time
+
+<Steps>
+  <Step title="View Live Dashboard">
+    The Impact Dashboard updates in real-time as data comes in:
+
+    **Key Metrics Displayed**
+    - Current total emissions
+    - Progress toward reduction target (percentage)
+    - Per-attendee emissions
+    - Category breakdown with progress bars
+    - Comparison to baseline
+    - Comparison to similar events
+
+    ```typescript
+    interface LiveImpactData {
+      timestamp: string;
+      currentEmissions: number;
+      targetEmissions: number;
+      progress: number; // percentage toward goal
+      attendeeCount: number;
+      perAttendeeEmissions: number;
+      categoryBreakdown: Record<string, number>;
+      projectedFinalEmissions: number;
+      onTrack: boolean;
+    }
+    ```
+  </Step>
+
+  <Step title="Track Attendee Contributions">
+    Monitor individual and collective attendee actions:
+
+    - Green transportation usage rates
+    - Digital materials adoption
+    - Carbon offset purchases
+    - Waste sorting compliance
+    - Sustainable meal choices
+
+    View leaderboards showing top contributors and departments (for corporate events).
+  </Step>
+
+  <Step title="Receive Alerts and Recommendations">
+    EcoEvents provides intelligent alerts:
+
+    - **On-Track Alert**: "Great news! You're 15% ahead of your reduction target."
+    - **Off-Track Warning**: "Travel emissions are 20% higher than expected. Consider promoting carpooling."
+    - **Optimization Suggestions**: "Switching to LED lighting could reduce venue emissions by 8%."
+    - **Milestone Celebrations**: "You've hit 50% waste diversion! Share this achievement with attendees."
+
+    Configure alert thresholds and delivery methods (email, SMS, dashboard) in Settings.
+  </Step>
+
+  <Step title="Display Public Dashboard">
+    Engage attendees with a public-facing dashboard:
+
+    1. Navigate to **Impact > Public Dashboard**
+    2. Toggle **Enable Public Dashboard**
+    3. Customize what metrics to display
+    4. Copy embed code or shareable link
+    5. Display on event website or on-site screens
+
+    ```html
+    <!-- Embed code for public dashboard -->
+    <iframe 
+      src="https://ecoevents.com/embed/impact/event-123" 
+      width="100%" 
+      height="600" 
+      frameborder="0"
+      title="Event Sustainability Dashboard">
+    </iframe>
+    ```
+
+    <Tip>
+    Displaying real-time impact data at the event increases attendee participation in sustainability initiatives by 40%.
+    </Tip>
+  </Step>
+</Steps>
+
+## Collecting Post-Event Data
+
+<Steps>
+  <Step title="Finalize Venue Data">
+    After the event, collect final data:
+
+    - Request actual energy bills from venue
+    - Collect water usage data
+    - Document HVAC runtime
+    - Record renewable energy percentage
+
+    Upload documents in **Impact > Data Sources > Venue**.
+  </Step>
+
+  <Step title="Complete Waste Audit">
+    Work with your venue or waste management partner:
+
+    - Total waste weight collected
+    - Recycling weight and materials
+    - Compost weight
+    - Landfill waste
+    - Special waste (electronics, batteries)
+
+    ```javascript
+    const wasteAudit = {
+      totalWeight: 250, // kg
+      recycled: 120,
+      composted: 80,
+      landfill: 50,
+      diversionRate: 80, // percentage
+      breakdown: {
+        paper: 45,
+        plastic: 30,
+        organic: 80,
+        glass: 15,
+        metal: 10,
+        mixed: 70
+      }
+    };
+    ```
+  </Step>
+
+  <Step title="Survey Attendees">
+    Send post-event sustainability survey:
+
+    - Confirm travel method and distance
+    - Gather feedback on sustainability initiatives
+    - Ask about sustainable practices adopted
+    - Request suggestions for improvement
+    - Measure awareness and satisfaction
+
+    Auto-send survey 24 hours after event in **Settings > Post-Event > Surveys**.
+  </Step>
+
+  <Step title="Verify and Lock Data">
+    Once all data is collected:
+
+    1. Review all data sources for accuracy
+    2. Click **Verify Data** to run validation checks
+    3. Address any warnings or inconsistencies
+    4. Click **Lock Data** to finalize calculations
+
+    <Warning>
+    Locking data is irreversible. Ensure all information is accurate before locking.
+    </Warning>
+  </Step>
+</Steps>
+
+## Generating Sustainability Reports
+
+<Steps>
+  <Step title="Create Comprehensive Report">
+    Navigate to **Impact > Reports** and click **Generate Report**:
+
+    ```typescript
+    interface ReportConfig {
+      type: 'summary' | 'detailed' | 'certification' | 'custom';
+      format: 'pdf' | 'html' | 'json';
+      sections: {
+        executiveSummary: boolean;
+        methodology: boolean;
+        carbonFootprint: boolean;
+        reductionAchieved: boolean;
+        categoryBreakdown: boolean;
+        comparisons: boolean;
+        attendeeContributions: boolean;
+        actionsPlan: boolean;
+        recommendations: boolean;
+        certifications: boolean;
+        rawData: boolean;
+      };
+      branding: {
+        includeLogos: boolean;
+        customColors: boolean;
+      };
+      audience: 'stakeholders' | 'attendees' | 'public' | 'certification-body';
+    }
+    ```
+
+    Select report type based on your needs:
+    - **Summary Report**: High-level overview for stakeholders
+    - **Detailed Report**: Comprehensive data and methodology
+    - **Certification Report**: Formatted for ISO/certification submission
+    - **Attendee Report**: Simplified version for participants
+  </Step>
+
+  <Step title="Customize Report Content">
+    Tailor the report to your audience:
+
+    **For Stakeholders**
+    - Focus on ROI of sustainability investments
+    - Highlight achievement of targets
+    - Include cost savings from green initiatives
+    - Showcase brand reputation benefits
+
+    **For Attendees**
+    - Celebrate collective achievements
+    - Show individual contributions
+    - Provide sustainability tips for future
+    - Thank participants for their efforts
+
+    **For Certification Bodies**
+    - Include detailed methodology
+    - Provide data sources and calculations
+    - Document verification processes
+    - Include third-party validations
+  </Step>
+
+  <Step title="Add Visualizations">
+    Reports include automatically generated charts:
+
+    - Emissions breakdown by category (pie chart)
+    - Progress toward targets (progress bars)
+    - Comparison to baseline (bar chart)
+    - Timeline of emissions (line graph)
+    - Attendee engagement metrics (dashboard)
+
+    Customize chart colors and styles to match your branding.
+  </Step>
+
+  <Step title="Review and Export">
+    Before finalizing:
+
+    1. Preview the report in browser
+    2. Check all calculations and data points
+    3. Verify charts and visualizations
+    4. Run spell-check on custom content
+    5. Export to desired format
+
+    ```javascript
+    const exportOptions = {
+      format: 'pdf',
+      quality: 'high',
+      includeAppendices: true,
+      includeRawData: false,
+      enableSharing: true,
+      password: null // optional password protection
+    };
+    ```
+  </Step>
+
+  <Step title="Share and Publish">
+    Multiple sharing options:
+
+    - **Email**: Send directly to stakeholders
+    - **Public URL**: Generate shareable link
+    - **Embed**: Add to your website
+    - **Download**: Save locally for presentations
+    - **API**: Fetch programmatically
+
+    <Tip>
+    Public sustainability reports increase event credibility and attract eco-conscious attendees to future events.
+    </Tip>
+  </Step>
+</Steps>
+
+## Benchmarking and Comparisons
+
+### Industry Benchmarks
+
+EcoEvents provides benchmarks by:
+- Event type (conference, festival, trade show, etc.)
+- Event size (< 100, 100-500, 500-1000, 1000+ attendees)
+- Geographic region
+- Industry sector
+
+```javascript
+const benchmarkComparison = {
+  yourEvent: {
+    perAttendee: 85, // kg CO2e
+    total: 42500
+  },
+  industryAverage: {
+    perAttendee: 120,
+    total: 60000
+  },
+  improvement: {
+    percentage: 29.2,
+    rank: 'top-25%' // Your event ranks in top 25% for sustainability
+  }
+};
+```
+
+### Historical Comparisons
+
+Track your progress across multiple events:
+- Year-over-year improvements
+- Cumulative emissions reduction
+- Total carbon avoided
+- Cost savings from sustainability
+
+### Best-in-Class Comparisons
+
+See how you compare to the most sustainable events in your category and identify areas for improvement.
+
+## Achieving Certifications
+
+<Steps>
+  <Step title="Select Certification Target">
+    EcoEvents supports multiple sustainability certifications:
+
+    - **ISO 20121**: Sustainable Event Management
+    - **Carbon Neutral Event**: Net-zero emissions achieved
+    - **LEED Event**: Green building standards
+    - **Green Meeting Industry Council (GMIC)**: Third-party verification
+
+    Each certification has specific requirements displayed in your dashboard.
+  </Step>
+
+  <Step title="Track Certification Progress">
+    Monitor your progress toward certification requirements:
+
+    ```typescript
+    interface CertificationProgress {
+      name: string;
+      requirements: Array<{
+        criterion: string;
+        required: boolean;
+        status: 'met' | 'not-met' | 'in-progress';
+        evidence: string[];
+      }>;
+      overallProgress: number; // percentage
+      eligible: boolean;
+    }
+    ```
+
+    The system flags any gaps and provides guidance on how to meet requirements.
+  </Step>
+
+  <Step title="Submit for Certification">
+    When ready:
+
+    1. Generate certification report
+    2. Upload required documentation
+    3. Pay certification fee (varies by program)
+    4. Submit for review
+
+    Review typically takes 2-4 weeks. EcoEvents facilitates the process and tracks status.
+  </Step>
+
+  <Step title="Display Certification Badge">
+    Once certified:
+
+    - Add certification badge to event pages
+    - Include in marketing materials
+    - Display on-site at events
+    - Share on social media
+
+    ```html
+    <img src="https://cdn.ecoevents.com/badges/iso20121-certified.svg" 
+         alt="ISO 20121 Certified Sustainable Event" 
+         width="150" />
+    ```
+  </Step>
+</Steps>
+
+## Best Practices for Impact Tracking
+
+### Start Early
+Begin tracking from the planning phase, not just during the event. Many emissions come from planning decisions.
+
+### Be Comprehensive
+Track all five categories for complete picture. Focusing on just one or two areas misses significant emissions.
+
+### Engage Attendees
+Attendees control major emission sources (travel, meal choices). Engage them early and often.
+
+### Use Accurate Data
+Prioritize actual data over estimates. Request venue bills, survey attendees, and work with partners.
+
+### Set Realistic Targets
+Ambitious goals are great, but unrealistic targets lead to disappointment. Start with 20-30% reduction, then increase.
+
+### Celebrate Wins
+Share progress and achievements with attendees and stakeholders. Positive reinforcement drives continued commitment.
+
+### Document Everything
+Keep detailed records of data sources, calculations, and assumptions. Essential for credibility and certifications.
+
+### Continuous Improvement
+Use each event's learnings to improve the next. Track progress across multiple events over time.
+
+## Advanced Impact Features
+
+### Real-Time Attendee Dashboard
+Provide attendees with personal impact dashboards showing their contributions and suggestions for improvement.
+
+### Supply Chain Emissions
+Track emissions from suppliers, vendors, and contractors involved in your event.
+
+### Social Impact Metrics
+Beyond carbon, track social sustainability: local economic impact, diversity, accessibility, community benefit.
+
+### AI-Powered Recommendations
+Receive machine learning-powered suggestions based on your event profile and historical data.
+
+### API Integration
+Integrate impact data with your existing reporting systems:
+
+```javascript
+// Fetch impact data via API
+const response = await fetch(
+  'https://api.ecoevents.com/v1/events/event-123/impact',
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    }
+  }
+);
+
+const impactData = await response.json();
+```
+
+## Next Steps
+
+- Share your impact report on social media
+- Apply for sustainability certifications
+- Set up [integrations with carbon accounting tools](/guides/integrations)
+- Review the [Analytics API documentation](/api/analytics)
+- Join the EcoEvents Sustainability Community
+
+## Troubleshooting
+
+### Data Seems Inaccurate
+- Verify all data sources are current
+- Check that attendee count is correct
+- Ensure location data is accurate for travel calculations
+- Review custom inputs for typos
+
+### Can't Achieve Reduction Target
+- Reassess baseline (may be too optimistic)
+- Focus on high-impact categories first
+- Consider carbon offsetting for remaining emissions
+- Extend timeline to multi-year goal
+
+### Certification Requirements Not Met
+- Review specific gaps in certification dashboard
+- Consult certification body's guidelines
+- Consider hiring sustainability consultant
+- Plan earlier for next event to allow time for compliance
+
+For additional support, contact our sustainability team at [sustainability@ecoevents.com](mailto:sustainability@ecoevents.com).

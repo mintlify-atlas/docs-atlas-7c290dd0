@@ -1,80 +1,566 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Create your first sustainable event in minutes with EcoEvents"
 ---
 
-## Get started in three steps
+## Get started with EcoEvents
 
-Get your documentation site running locally and make your first customization.
+This guide will walk you through setting up your EcoEvents account and creating your first sustainable event. You'll learn how to configure sustainability settings, invite attendees, and view your environmental impact metrics.
 
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
+<Steps>
+  <Step title="Create your account">
+    Sign up for EcoEvents and complete your organization profile.
     
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
+    <Tabs>
+      <Tab title="Web App">
+        1. Navigate to [app.ecoevents.com/signup](https://app.ecoevents.com/signup)
+        2. Enter your organization details:
+           - **Organization name**: Your company or organization
+           - **Email**: Your work email address
+           - **Password**: At least 8 characters with one number
+        3. Click **Create Account**
+        4. Verify your email address by clicking the link sent to your inbox
+        
+        <Tip>Use your organization's domain email for easier team member invitations later.</Tip>
+      </Tab>
+      
+      <Tab title="API">
+        You can also create an account programmatically using our REST API:
+        
+        ```bash
+        curl -X POST https://api.ecoevents.com/v1/auth/signup \
+          -H "Content-Type: application/json" \
+          -d '{
+            "organizationName": "Green Corp",
+            "email": "events@greencorp.com",
+            "password": "secure_password123"
+          }'
+        ```
+        
+        The API will return your authentication token and organization ID:
+        
+        ```json
+        {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "organizationId": "org_2Xh9KQp4mN8",
+          "email": "events@greencorp.com"
+        }
+        ```
+      </Tab>
+    </Tabs>
     
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+    After verification, you'll be redirected to your dashboard where you can start creating events.
+  </Step>
 
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
+  <Step title="Create your first event">
+    Set up a new event with sustainability goals and environmental tracking.
     
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    ### Navigate to Event Creation
+    
+    From your dashboard, click **Create Event** in the top right corner, or navigate to the Events tab and click **+ New Event**.
+    
+    ### Configure Event Details
+    
+    Fill out the basic information about your event:
+    
+    <ParamField path="name" type="string" required>
+      The name of your event (e.g., "Annual Tech Summit 2026")
+    </ParamField>
+    
+    <ParamField path="date" type="date" required>
+      Event start date and time
+    </ParamField>
+    
+    <ParamField path="location" type="string" required>
+      Venue address or "Virtual" for online events
+    </ParamField>
+    
+    <ParamField path="expectedAttendees" type="number" required>
+      Estimated number of participants (used for carbon calculations)
+    </ParamField>
+    
+    <CodeGroup>
+      ```javascript React Example
+      import { useState } from 'react';
+      
+      function CreateEvent() {
+        const [event, setEvent] = useState({
+          name: '',
+          date: '',
+          location: '',
+          expectedAttendees: 0,
+          sustainabilityGoals: []
+        });
+        
+        const handleSubmit = async (e) => {
+          e.preventDefault();
+          const response = await fetch('/api/events', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(event)
+          });
+          
+          const newEvent = await response.json();
+          console.log('Event created:', newEvent);
+        };
+        
+        return (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Event name"
+              value={event.name}
+              onChange={(e) => setEvent({...event, name: e.target.value})}
+            />
+            {/* Additional fields */}
+            <button type="submit">Create Event</button>
+          </form>
+        );
+      }
+      ```
+      
+      ```bash cURL
+      curl -X POST https://api.ecoevents.com/v1/events \
+        -H "Authorization: Bearer YOUR_TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "name": "Annual Tech Summit 2026",
+          "date": "2026-06-15T09:00:00Z",
+          "location": "San Francisco Convention Center",
+          "expectedAttendees": 500,
+          "sustainabilityGoals": [
+            "carbon-neutral",
+            "zero-waste",
+            "local-sourcing"
+          ]
+        }'
+      ```
+      
+      ```javascript Express Backend
+      // Using Sequelize ORM with Express
+      const express = require('express');
+      const { Event } = require('./models');
+      
+      const app = express();
+      
+      app.post('/api/events', async (req, res) => {
+        try {
+          const event = await Event.create({
+            name: req.body.name,
+            date: req.body.date,
+            location: req.body.location,
+            expectedAttendees: req.body.expectedAttendees,
+            organizationId: req.user.organizationId,
+            sustainabilityGoals: req.body.sustainabilityGoals
+          });
+          
+          res.status(201).json(event);
+        } catch (error) {
+          res.status(400).json({ error: error.message });
+        }
+      });
+      ```
+    </CodeGroup>
+    
+    ### Set Sustainability Goals
+    
+    Choose the environmental initiatives you want to track for this event:
+    
+    <AccordionGroup>
+      <Accordion icon="leaf" title="Carbon Neutral">
+        Track and offset all carbon emissions from travel, venue energy, and catering
+      </Accordion>
+      
+      <Accordion icon="recycle" title="Zero Waste">
+        Minimize waste through composting, recycling, and reusable materials
+      </Accordion>
+      
+      <Accordion icon="location-dot" title="Local Sourcing">
+        Prioritize local vendors, food suppliers, and materials to reduce transportation emissions
+      </Accordion>
+      
+      <Accordion icon="bolt" title="Renewable Energy">
+        Use venues powered by renewable energy sources
+      </Accordion>
+      
+      <Accordion icon="wifi" title="Virtual/Hybrid Options">
+        Reduce travel emissions by offering remote participation
+      </Accordion>
+    </AccordionGroup>
+    
+    <Note>
+      EcoEvents automatically calculates baseline carbon emissions based on your event type, location, and attendee count. You can view detailed breakdowns in the Analytics section.
+    </Note>
+    
+    Click **Create Event** to save your event. You'll be redirected to the event dashboard.
+  </Step>
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+  <Step title="Invite attendees">
+    Add participants and track registrations for your event.
+    
+    ### Bulk Invite via CSV
+    
+    The fastest way to invite multiple attendees:
+    
+    1. Click **Attendees** in the event sidebar
+    2. Click **Import CSV**
+    3. Upload a CSV file with columns: `email`, `firstName`, `lastName`, `organization`
+    4. Review the preview and click **Send Invitations**
+    
+    Download our [CSV template](https://assets.ecoevents.com/templates/attendees.csv) for the correct format.
+    
+    ### Individual Invitations
+    
+    <CodeGroup>
+      ```javascript React Component
+      function InviteAttendee({ eventId }) {
+        const [email, setEmail] = useState('');
+        
+        const sendInvite = async () => {
+          const response = await fetch(`/api/events/${eventId}/invites`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              email,
+              role: 'attendee',
+              sendEmail: true
+            })
+          });
+          
+          if (response.ok) {
+            alert('Invitation sent!');
+          }
+        };
+        
+        return (
+          <div>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="attendee@example.com"
+            />
+            <button onClick={sendInvite}>Send Invite</button>
+          </div>
+        );
+      }
+      ```
+      
+      ```bash API Request
+      curl -X POST https://api.ecoevents.com/v1/events/evt_abc123/invites \
+        -H "Authorization: Bearer YOUR_TOKEN" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "email": "attendee@example.com",
+          "firstName": "Jane",
+          "lastName": "Smith",
+          "organization": "Tech Corp",
+          "role": "attendee",
+          "sendEmail": true
+        }'
+      ```
+      
+      ```javascript Sequelize Model
+      // Backend model for attendee invitations
+      const { DataTypes } = require('sequelize');
+      
+      module.exports = (sequelize) => {
+        const Invitation = sequelize.define('Invitation', {
+          id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true
+          },
+          eventId: {
+            type: DataTypes.UUID,
+            allowNull: false
+          },
+          email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: { isEmail: true }
+          },
+          firstName: DataTypes.STRING,
+          lastName: DataTypes.STRING,
+          organization: DataTypes.STRING,
+          status: {
+            type: DataTypes.ENUM('pending', 'accepted', 'declined'),
+            defaultValue: 'pending'
+          },
+          invitedAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW
+          }
+        });
+        
+        return Invitation;
+      };
+      ```
+    </CodeGroup>
+    
+    ### Customize Invitation Settings
+    
+    <Tabs>
+      <Tab title="Email Template">
+        Customize the invitation email with your branding:
+        
+        - **Subject line**: Event name is automatically included
+        - **Message**: Add a personal note or event highlights
+        - **RSVP deadline**: Set a registration cutoff date
+        - **Sustainability pledge**: Ask attendees to commit to eco-friendly practices
+      </Tab>
+      
+      <Tab title="Registration Questions">
+        Collect important information during sign-up:
+        
+        - Dietary preferences (for catering estimates)
+        - Transportation method (for carbon tracking)
+        - Accommodation needs
+        - Accessibility requirements
+      </Tab>
+    </Tabs>
+    
+    <Tip>
+      Enable **Transportation Tracking** in your event settings to automatically calculate travel-related carbon emissions based on attendee responses.
+    </Tip>
+  </Step>
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+  <Step title="View sustainability metrics">
+    Monitor your event's environmental impact in real-time.
+    
+    ### Access the Analytics Dashboard
+    
+    Navigate to **Analytics** in your event sidebar to view comprehensive sustainability metrics.
+    
+    ### Key Metrics to Track
+    
+    <CardGroup cols={2}>
+      <Card title="Carbon Footprint" icon="cloud">
+        Total CO₂ emissions in tonnes, broken down by category:
+        - Travel (attendee transportation)
+        - Venue (energy consumption)
+        - Catering (food production and waste)
+        - Materials (printed materials, signage)
+      </Card>
+      
+      <Card title="Waste Reduction" icon="trash">
+        Track waste diversion rates:
+        - Total waste generated
+        - Recycling rate
+        - Composting rate
+        - Landfill diversion percentage
+      </Card>
+      
+      <Card title="Local Impact" icon="map-pin">
+        Monitor local sourcing goals:
+        - Percentage of local vendors
+        - Miles saved from local sourcing
+        - Support for local businesses
+      </Card>
+      
+      <Card title="Attendee Actions" icon="users">
+        Track participant engagement:
+        - Carpools organized
+        - Public transit usage
+        - Digital-first attendees
+        - Sustainability pledges signed
+      </Card>
+    </CardGroup>
+    
+    ### Example Analytics Query
+    
+    <CodeGroup>
+      ```javascript React Dashboard
+      import { useEffect, useState } from 'react';
+      
+      function EventAnalytics({ eventId }) {
+        const [metrics, setMetrics] = useState(null);
+        
+        useEffect(() => {
+          fetch(`/api/events/${eventId}/analytics`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          })
+            .then(res => res.json())
+            .then(data => setMetrics(data));
+        }, [eventId]);
+        
+        if (!metrics) return <div>Loading...</div>;
+        
+        return (
+          <div>
+            <h2>Sustainability Metrics</h2>
+            <div>
+              <h3>Carbon Footprint</h3>
+              <p>{metrics.carbonFootprint.total} tonnes CO₂e</p>
+              <ul>
+                <li>Travel: {metrics.carbonFootprint.travel} t</li>
+                <li>Venue: {metrics.carbonFootprint.venue} t</li>
+                <li>Catering: {metrics.carbonFootprint.catering} t</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3>Waste Diversion</h3>
+              <p>{metrics.wasteStats.diversionRate}% diverted from landfill</p>
+            </div>
+          </div>
+        );
+      }
+      ```
+      
+      ```bash API Request
+      curl https://api.ecoevents.com/v1/events/evt_abc123/analytics \
+        -H "Authorization: Bearer YOUR_TOKEN"
+      ```
+      
+      ```json Response
+      {
+        "eventId": "evt_abc123",
+        "carbonFootprint": {
+          "total": 12.5,
+          "breakdown": {
+            "travel": 8.2,
+            "venue": 2.1,
+            "catering": 1.8,
+            "materials": 0.4
+          },
+          "unit": "tonnes_co2e"
+        },
+        "wasteStats": {
+          "totalWaste": 150,
+          "recycled": 85,
+          "composted": 45,
+          "landfill": 20,
+          "diversionRate": 86.7,
+          "unit": "kg"
+        },
+        "localSourcing": {
+          "percentage": 78,
+          "vendorCount": 12,
+          "localVendorCount": 9,
+          "milesSaved": 3420
+        },
+        "attendeeEngagement": {
+          "totalAttendees": 487,
+          "carpoolParticipants": 124,
+          "publicTransitUsers": 203,
+          "virtualAttendees": 89,
+          "pledgesSigned": 412
+        },
+        "lastUpdated": "2026-06-15T16:30:00Z"
+      }
+      ```
+    </CodeGroup>
+    
+    ### Generate Reports
+    
+    Create shareable sustainability reports for stakeholders:
+    
+    1. Click **Generate Report** in the Analytics dashboard
+    2. Select report type:
+       - **Executive Summary**: High-level metrics and achievements
+       - **Detailed Analysis**: Comprehensive breakdown with recommendations
+       - **Comparison Report**: Compare with similar events or industry benchmarks
+    3. Choose format: PDF, CSV, or interactive web report
+    4. Share directly via email or download for distribution
+    
+    <Note>
+      Reports include visual charts, year-over-year comparisons, and actionable recommendations for improving sustainability in future events.
+    </Note>
+  </Step>
+</Steps>
 
-### Step 3: Go live
+## Next Steps
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
+Now that you've created your first event, explore these features to maximize your impact:
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card
+    title="Event Management"
+    icon="calendar-check"
+    href="/features/event-management"
+  >
+    Learn advanced event configuration and management features
+  </Card>
+  
+  <Card
+    title="Tracking Impact"
+    icon="leaf"
+    href="/guides/tracking-impact"
+  >
+    Learn how to measure and reduce your event's environmental impact
+  </Card>
+  
+  <Card
+    title="API Integration"
+    icon="code"
+    href="/api/introduction"
+  >
+    Integrate EcoEvents with your existing tools and workflows
+  </Card>
+  
+  <Card
+    title="Managing Attendees"
+    icon="users"
+    href="/guides/managing-attendees"
+  >
+    Handle registrations, check-ins, and attendee communications
+  </Card>
 </CardGroup>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+## Technology Stack
+
+EcoEvents is built with modern, scalable technologies:
+
+- **Frontend**: React 19 with TypeScript and Vite
+- **Backend**: Express 5 with Node.js
+- **Database**: PostgreSQL with Sequelize ORM
+- **API**: RESTful architecture with JWT authentication
+
+<Tip>
+  Check out our [GitHub repository](https://github.com/ecoevents/platform) for open-source components and contribution guidelines.
+</Tip>
+
+## Need Help?
+
+<CardGroup cols={2}>
+  <Card
+    title="Documentation"
+    icon="book"
+    href="/introduction"
+  >
+    Browse the complete documentation
+  </Card>
+  
+  <Card
+    title="Support"
+    icon="life-ring"
+    href="mailto:support@ecoevents.com"
+  >
+    Contact our support team
+  </Card>
+  
+  <Card
+    title="Community Forum"
+    icon="comments"
+    href="https://community.ecoevents.com"
+  >
+    Join discussions with other event organizers
+  </Card>
+  
+  <Card
+    title="Integrations"
+    icon="plug"
+    href="/guides/integrations"
+  >
+    Connect with your favorite tools and services
+  </Card>
+</CardGroup>

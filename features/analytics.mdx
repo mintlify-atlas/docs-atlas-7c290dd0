@@ -1,0 +1,682 @@
+---
+title: 'Analytics & Reporting'
+description: 'Gain actionable insights with real-time dashboards, custom reports, and data visualization for event performance and sustainability metrics'
+icon: 'chart-mixed'
+---
+
+## Overview
+
+EcoEvents Analytics transforms raw event data into actionable insights. Monitor performance in real-time, generate comprehensive reports, and make data-driven decisions to optimize both event success and environmental impact.
+
+<CardGroup cols={2}>
+  <Card title="Real-Time Dashboards" icon="gauge-high">
+    Live monitoring of attendance, engagement, and sustainability metrics
+  </Card>
+  <Card title="Custom Reports" icon="file-chart-column">
+    Build tailored reports for stakeholders with drag-and-drop simplicity
+  </Card>
+  <Card title="Predictive Analytics" icon="crystal-ball">
+    AI-powered forecasting for attendance, resources, and environmental impact
+  </Card>
+  <Card title="Trend Analysis" icon="chart-line-up">
+    Track performance across events to identify patterns and improvements
+  </Card>
+</CardGroup>
+
+## Real-Time Dashboards
+
+### Event Operations Dashboard
+
+Monitor your event as it happens:
+
+<Tabs>
+  <Tab title="Attendance Tracking">
+    **Live Attendance Metrics:**
+
+    - **Total Checked In** - Real-time counter with percentage of expected
+    - **Check-In Rate** - Attendees per minute with trend line
+    - **Current Occupancy** - Live count in venue zones
+    - **Session Attendance** - Track attendance for individual sessions
+    - **No-Show Analysis** - Predict final attendance based on current trends
+
+    **Visualizations:**
+    - Line graph: Check-ins over time
+    - Heat map: Busy zones and traffic flow
+    - Gauge charts: Capacity utilization by area
+    - Comparison bar: Expected vs. actual attendance
+
+    <Note>
+      Set up alerts for attendance thresholds (e.g., notify when 90% capacity reached) to manage crowd flow and safety.
+    </Note>
+  </Tab>
+  <Tab title="Engagement Metrics">
+    **Attendee Engagement Tracking:**
+
+    - **Session Popularity** - Most attended sessions and tracks
+    - **Dwell Time** - Average time spent in different areas
+    - **App Usage** - Mobile app opens, page views, feature usage
+    - **Networking Activity** - Connections made, messages sent
+    - **Interaction Rates** - Poll responses, Q&A participation
+    - **Sponsor Booth Traffic** - Vendor area engagement
+
+    **Engagement Score:**
+    Composite metric combining:
+    - Number of sessions attended
+    - Time spent in venue
+    - App interactions
+    - Networking connections
+    - Survey responses
+
+    Identify highly engaged vs. disengaged attendees for targeted follow-up.
+  </Tab>
+  <Tab title="Operations Status">
+    **Real-Time Operations Monitoring:**
+
+    - **Check-In Queue** - Wait times at entry points
+    - **Session Capacity** - Room fill rates and standing-room alerts
+    - **Catering Status** - Food/beverage consumption rates
+    - **Technical Issues** - WiFi, AV, app performance
+    - **Staff Allocation** - Team positioning and workload
+    - **Incident Tracking** - Issues reported and resolution status
+
+    **Alert System:**
+    ```javascript
+    // Configure real-time alerts
+    {
+      "alertType": "capacity_warning",
+      "condition": "session.occupancy > 0.9",
+      "notification": "SMS to event manager",
+      "message": "Session {{sessionName}} at 90% capacity"
+    }
+    ```
+
+    Proactive notifications help you address issues before they impact attendee experience.
+  </Tab>
+  <Tab title="Financial Tracking">
+    **Revenue & Budget Monitoring:**
+
+    - **Registration Revenue** - Real-time ticket sales with projections
+    - **On-Site Sales** - Merchandise, add-ons, concessions
+    - **Sponsor Deliverables** - Tracking of sponsor package fulfillment
+    - **Expense Tracking** - Actual costs vs. budgeted amounts
+    - **ROI Calculator** - Return on investment for sustainability initiatives
+
+    **Financial Health Score:**
+    - Budget adherence percentage
+    - Revenue vs. target
+    - Cost per attendee
+    - Profit margin
+
+    Filter financial data by category (venue, catering, technology, marketing, sustainability).
+  </Tab>
+</Tabs>
+
+### Sustainability Dashboard
+
+Dedicated dashboard for environmental impact:
+
+<CardGroup cols={2}>
+  <Card title="Carbon Footprint" icon="cloud">
+    **Live Carbon Tracking:**
+    - Total CO2e emissions (running total)
+    - Emissions by source (pie chart)
+    - Per-attendee average
+    - Comparison to baseline
+    - Offset progress toward goals
+    - Real-time offset purchases by attendees
+
+    Celebrate milestones: "Carbon neutral achieved! 🎉"
+  </Card>
+  <Card title="Waste Diversion" icon="recycle">
+    **Waste Management Progress:**
+    - Total waste generated (weight/volume)
+    - Diversion rate percentage (large gauge)
+    - Breakdown: recycled, composted, landfill
+    - Contamination rates
+    - Waste per attendee
+    - Progress toward zero waste certification
+
+    Visual: Stacked area chart showing accumulation over time
+  </Card>
+  <Card title="Energy & Water" icon="droplet">
+    **Resource Consumption:**
+    - kWh electricity used (vs. forecast)
+    - Renewable energy percentage
+    - Gallons of water consumed
+    - Resource efficiency scores
+    - Peak demand periods
+    - Cost savings from efficiency measures
+
+    Compare to similar events for context
+  </Card>
+  <Card title="Sustainable Choices" icon="leaf">
+    **Attendee Green Behavior:**
+    - Green transportation mode percentages
+    - Plant-based meal selections
+    - Digital badge adoption rate
+    - Carbon offset participation
+    - Reusable item usage (water bottles, utensils)
+    - Sustainability challenge participation
+
+    Gamification leaderboard for most sustainable attendees
+  </Card>
+</CardGroup>
+
+### Executive Dashboard
+
+High-level overview for leadership:
+
+- **Key Performance Indicators (KPIs)** - Top 6-8 most important metrics
+- **Attendance Summary** - Registration vs. check-in vs. target
+- **Financial Snapshot** - Revenue, expenses, ROI
+- **Sustainability Score** - Composite environmental rating (0-100)
+- **Attendee Satisfaction** - Real-time survey results
+- **Alert Summary** - Critical issues requiring attention
+- **Comparison Metrics** - Performance vs. previous events
+
+<Warning>
+  Customize KPIs for each stakeholder role. What matters to sponsors differs from what matters to venue managers or sustainability coordinators.
+</Warning>
+
+## Custom Report Builder
+
+### Drag-and-Drop Report Designer
+
+Create tailored reports without technical expertise:
+
+<Tabs>
+  <Tab title="Report Templates">
+    **Pre-Built Templates:**
+
+    Start with professionally designed templates:
+
+    - **Executive Summary** - High-level overview for leadership
+    - **Sustainability Impact Report** - Comprehensive environmental analysis
+    - **Financial Performance** - Revenue, costs, ROI breakdown
+    - **Attendee Analysis** - Demographics, behavior, satisfaction
+    - **Marketing Effectiveness** - Registration sources, conversion rates
+    - **Vendor Performance** - Supplier ratings and compliance
+    - **Post-Event Wrap-Up** - Complete event recap
+    - **Sponsor Deliverables** - Proof of value for sponsors
+
+    Customize templates or start from scratch.
+  </Tab>
+  <Tab title="Data Sources">
+    **Available Data Sets:**
+
+    Pull data from across the platform:
+
+    - Registration and attendee demographics
+    - Check-in and attendance patterns
+    - Session and engagement metrics
+    - Financial transactions
+    - Sustainability measurements
+    - Survey responses and feedback
+    - Vendor and supplier data
+    - Marketing and promotion analytics
+    - Historical event comparisons
+
+    **Data Filters:**
+    - Date ranges
+    - Attendee segments
+    - Ticket types
+    - Geographic regions
+    - Sustainability choices
+    - Custom tags
+  </Tab>
+  <Tab title="Visualizations">
+    **Chart Types:**
+
+    Choose from diverse visualization options:
+
+    - **Bar Charts** - Compare categories (e.g., transportation modes)
+    - **Line Graphs** - Show trends over time (e.g., registration pace)
+    - **Pie Charts** - Display proportions (e.g., waste breakdown)
+    - **Heat Maps** - Visualize spatial data (e.g., venue traffic)
+    - **Scatter Plots** - Explore correlations (e.g., sustainability vs. satisfaction)
+    - **Gauges** - Show progress toward goals (e.g., carbon targets)
+    - **Tables** - Present detailed data with sorting/filtering
+    - **Infographics** - Combine visuals for compelling stories
+
+    All charts are interactive with hover details and drill-down capabilities.
+  </Tab>
+  <Tab title="Scheduling & Sharing">
+    **Report Automation:**
+
+    Set up automated report generation and distribution:
+
+    ```javascript
+    {
+      "reportName": "Weekly Sustainability Update",
+      "schedule": "every Monday at 9:00 AM",
+      "recipients": [
+        "sustainability@company.com",
+        "events@company.com"
+      ],
+      "format": "PDF",
+      "includeComparison": true,
+      "compareToEvent": "previous_event"
+    }
+    ```
+
+    **Sharing Options:**
+    - Email distribution lists
+    - Public shareable links (with privacy controls)
+    - Embed in websites or intranets
+    - Export to PDF, Excel, PowerPoint
+    - API access for custom integrations
+    - Print-optimized formatting
+  </Tab>
+</Tabs>
+
+### Report Examples
+
+<Accordion title="Sustainability Impact Report">
+  **Comprehensive environmental analysis including:**
+
+  1. **Executive Summary**
+     - Total carbon footprint with offset status
+     - Waste diversion rate and certification achieved
+     - Key sustainability achievements
+     - Cost savings from green initiatives
+
+  2. **Carbon Footprint Analysis**
+     - Emissions breakdown by source (travel, venue, food, materials)
+     - Per-attendee emissions vs. baseline
+     - Comparison to previous events
+     - Offset project details and verification
+
+  3. **Waste Management**
+     - Total waste generated and diversion rate
+     - Category breakdown (recycling, compost, landfill)
+     - Contamination rates and quality
+     - Vendor compliance and performance
+
+  4. **Resource Efficiency**
+     - Energy consumption and renewable percentage
+     - Water usage and conservation
+     - Efficiency scores and benchmarks
+
+  5. **Attendee Behavior**
+     - Green transportation choices
+     - Sustainable meal selections
+     - Carbon offset participation
+     - Survey feedback on sustainability
+
+  6. **Recommendations**
+     - Improvement opportunities for future events
+     - Best practices to continue
+     - Vendor suggestions
+     - Certification pathways
+</Accordion>
+
+<Accordion title="Attendee Analysis Report">
+  **Deep dive into attendee demographics and behavior:**
+
+  - **Demographics** - Age, gender, location, industry, job role
+  - **Registration Patterns** - Source, timing, ticket type, group size
+  - **Attendance Behavior** - Check-in time, sessions attended, dwell time
+  - **Engagement Metrics** - App usage, networking, interactions
+  - **Satisfaction Scores** - Survey results and sentiment analysis
+  - **Sustainability Choices** - Green options selected and participation
+  - **Segmentation** - Cluster analysis to identify attendee personas
+  - **Retention** - Likelihood to attend future events
+</Accordion>
+
+<Accordion title="Financial Performance Report">
+  **Comprehensive financial analysis:**
+
+  - **Revenue Breakdown** - By ticket type, add-ons, sponsorships
+  - **Expense Categories** - Venue, catering, technology, marketing, sustainability
+  - **Budget Variance** - Actual vs. planned with explanations
+  - **ROI Analysis** - Return on investment overall and by category
+  - **Sustainability ROI** - Cost vs. benefit of green initiatives
+  - **Pricing Analysis** - Optimal pricing recommendations
+  - **Forecasting** - Revenue and cost projections for future events
+</Accordion>
+
+## Data Visualization Tools
+
+### Interactive Charts
+
+All analytics feature interactive, explorable visualizations:
+
+- **Hover Details** - See exact values and context on mouseover
+- **Drill-Down** - Click to explore underlying data
+- **Time Sliders** - Adjust time ranges dynamically
+- **Filtering** - Show/hide data series
+- **Comparison Mode** - Overlay data from multiple events
+- **Export** - Download charts as images or data files
+
+### Geographic Mapping
+
+Visualize location-based data:
+
+<CardGroup cols={2}>
+  <Card title="Attendee Origins" icon="map">
+    Map showing where attendees are traveling from:
+    - Radius circles for distance analysis
+    - Heat map for concentration
+    - Filter by transportation mode
+    - Calculate total travel emissions
+  </Card>
+  <Card title="Venue Heat Maps" icon="map-location-dot">
+    Track movement and density within venue:
+    - Popular zones and traffic flow
+    - Bottleneck identification
+    - Dwell time by area
+    - Optimize layout for future events
+  </Card>
+</CardGroup>
+
+## Predictive Analytics
+
+### AI-Powered Forecasting
+
+Leverage machine learning for better planning:
+
+<Tabs>
+  <Tab title="Attendance Prediction">
+    **Registration Pace Analysis:**
+
+    Predict final attendance based on:
+    - Historical registration patterns
+    - Current registration pace
+    - External factors (holidays, weather, competing events)
+    - Marketing campaign effectiveness
+    - Early bird vs. late registration trends
+
+    **Outputs:**
+    - Predicted final attendance (with confidence interval)
+    - Expected no-show rate
+    - Recommended capacity adjustments
+    - Optimal registration deadline
+    - Pricing recommendations
+
+    <Note>
+      Our AI models are trained on millions of event registrations and achieve 85-92% accuracy in attendance prediction.
+    </Note>
+  </Tab>
+  <Tab title="Resource Optimization">
+    **Consumption Forecasting:**
+
+    Predict resource needs based on:
+    - Expected attendance
+    - Event duration and schedule
+    - Historical consumption patterns
+    - Weather forecasts
+    - Attendee preferences
+
+    **Predictions:**
+    - Catering quantities (meals, beverages)
+    - Energy usage by hour
+    - Water consumption
+    - Waste generation
+    - Parking and transportation needs
+    - Staffing requirements
+
+    Optimization suggestions to minimize waste and cost while ensuring adequacy.
+  </Tab>
+  <Tab title="Sustainability Impact">
+    **Environmental Impact Forecasting:**
+
+    Predict event sustainability metrics:
+    - Expected carbon footprint (by source)
+    - Waste generation and diversion rate
+    - Energy and water usage
+    - Impact of potential decisions ("What if we switched to plant-based catering?")
+
+    **Scenario Modeling:**
+    ```javascript
+    // Model sustainability scenarios
+    const scenarios = [
+      { name: "Baseline", cateringType: "mixed" },
+      { name: "Plant-Based", cateringType: "vegan" },
+      { name: "Local Only", sourcing: "local" }
+    ];
+
+    const predictions = await ecoEvents.analytics.predict({
+      eventId: 'evt_12345',
+      scenarios: scenarios
+    });
+    ```
+
+    Compare predicted impacts to make informed sustainability decisions.
+  </Tab>
+  <Tab title="Satisfaction Prediction">
+    **Experience Forecasting:**
+
+    Predict attendee satisfaction based on:
+    - Event configuration and schedule
+    - Venue and location ratings
+    - Historical feedback patterns
+    - Pricing and value perception
+    - Sustainability initiatives
+
+    **Early Warning System:**
+    - Identify factors likely to cause dissatisfaction
+    - Recommend interventions before the event
+    - Monitor satisfaction indicators in real-time
+    - Predict Net Promoter Score (NPS)
+  </Tab>
+</Tabs>
+
+## Trend Analysis
+
+### Multi-Event Comparison
+
+Track performance across event series:
+
+<Accordion title="Performance Trends">
+  **Analyze improvement over time:**
+
+  - Attendance growth trajectory
+  - Registration conversion rate trends
+  - Revenue per attendee progression
+  - Sustainability metric improvements
+  - Satisfaction score evolution
+  - Cost efficiency gains
+
+  **Visualizations:**
+  - Line graphs showing trends across events
+  - Year-over-year comparison bars
+  - Trend lines with projections
+  - Anomaly detection highlighting outliers
+</Accordion>
+
+<Accordion title="Sustainability Progress">
+  **Environmental impact trajectory:**
+
+  - Carbon footprint reduction over time
+  - Waste diversion rate improvements
+  - Energy efficiency gains
+  - Attendee green behavior adoption
+  - Vendor sustainability score increases
+  - Certification progress
+
+  Set long-term sustainability goals and track progress across all events.
+</Accordion>
+
+<Accordion title="Cohort Analysis">
+  **Attendee retention and behavior:**
+
+  - First-time vs. returning attendee ratios
+  - Retention rates by cohort
+  - Behavior changes over time (e.g., increasing sustainability engagement)
+  - Lifetime value of attendees
+  - Churn prediction and prevention
+</Accordion>
+
+### Industry Benchmarking
+
+Compare your performance to industry standards:
+
+- **Attendance Metrics** - Registration rates, no-show percentages
+- **Financial KPIs** - Revenue per attendee, cost structures
+- **Sustainability Benchmarks** - Carbon per attendee, waste diversion rates
+- **Engagement Scores** - App usage, session attendance, satisfaction
+- **Best-in-Class** - Top 10% performance targets
+
+Anonymized aggregate data from EcoEvents platform provides robust benchmarks.
+
+## Data Export & Integration
+
+### Export Options
+
+Get your data in your preferred format:
+
+<CardGroup cols={3}>
+  <Card title="CSV/Excel" icon="file-excel">
+    Raw data for analysis in spreadsheet software
+  </Card>
+  <Card title="PDF Reports" icon="file-pdf">
+    Formatted reports for sharing and archiving
+  </Card>
+  <Card title="PowerPoint" icon="file-powerpoint">
+    Charts and slides ready for presentations
+  </Card>
+</CardGroup>
+
+### API Access
+
+Programmatic access to analytics data:
+
+```javascript
+// Fetch analytics data via API
+const analytics = await ecoEvents.analytics.query({
+  eventId: 'evt_12345',
+  metrics: [
+    'attendance.total',
+    'sustainability.carbonFootprint',
+    'sustainability.wasteGenerated',
+    'finance.revenue'
+  ],
+  groupBy: 'day',
+  dateRange: {
+    start: '2026-03-01',
+    end: '2026-03-05'
+  }
+});
+
+// Response
+{
+  "data": [
+    {
+      "date": "2026-03-01",
+      "attendance.total": 487,
+      "sustainability.carbonFootprint": 2450.5,
+      "sustainability.wasteGenerated": 145.2,
+      "finance.revenue": 24350.00
+    },
+    // ... more days
+  ]
+}
+```
+
+### Third-Party Integrations
+
+Connect EcoEvents analytics with other platforms:
+
+- **Business Intelligence** - Tableau, Power BI, Looker
+- **Data Warehouses** - Snowflake, BigQuery, Redshift
+- **CRM Systems** - Salesforce, HubSpot
+- **Marketing Tools** - Google Analytics, Mixpanel
+- **Sustainability Platforms** - Watershed, Persefoni, Sweep
+- **Accounting Software** - QuickBooks, Xero, NetSuite
+
+## Best Practices
+
+<Accordion title="Define KPIs Early">
+  Establish key metrics before your event:
+  - What does success look like for your organization?
+  - Which metrics align with strategic goals?
+  - What data do stakeholders need?
+  - Set specific, measurable targets
+  - Ensure you're collecting necessary data
+</Accordion>
+
+<Accordion title="Monitor in Real-Time">
+  Don't wait until after the event:
+  - Set up dashboards before event starts
+  - Configure alerts for critical thresholds
+  - Designate team members to monitor specific metrics
+  - Empower staff to make data-driven decisions on-site
+  - Document issues and responses for post-event analysis
+</Accordion>
+
+<Accordion title="Tell Stories with Data">
+  Numbers are more compelling in context:
+  - Use visualizations over tables when possible
+  - Provide comparisons and benchmarks
+  - Translate metrics into tangible impacts ("Equivalent to...")
+  - Highlight achievements and celebrate successes
+  - Be transparent about challenges and learnings
+</Accordion>
+
+<Accordion title="Close the Loop">
+  Use insights to improve future events:
+  - Schedule post-event data review meetings
+  - Document lessons learned
+  - Update processes based on findings
+  - Share insights across organization
+  - Set improvement targets for next event
+  - Track progress over time
+</Accordion>
+
+## Advanced Features
+
+### Custom Metrics
+
+Define organization-specific KPIs:
+
+```javascript
+// Create custom metric
+const customMetric = await ecoEvents.analytics.createMetric({
+  name: 'Sustainability Engagement Score',
+  formula: '(
+    (greenTransportation * 0.3) +
+    (plantBasedMeals * 0.25) +
+    (digitalBadges * 0.15) +
+    (carbonOffsetOptIn * 0.2) +
+    (sustainabilitySurveyComplete * 0.1)
+  ) * 100',
+  displayAs: 'percentage',
+  benchmark: 65
+});
+```
+
+### Data Science Tools
+
+Advanced analytics for data teams:
+
+- **SQL Query Builder** - Write custom queries against event database
+- **Python/R Integration** - Export data for statistical analysis
+- **Machine Learning** - Train custom models on your event data
+- **A/B Testing Framework** - Experiment with different approaches
+
+### White-Label Reporting
+
+Customize reports with your branding:
+
+- Upload organization logo and colors
+- Custom report headers and footers
+- Branded email templates
+- White-label public dashboards
+- Remove EcoEvents branding (enterprise plan)
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Event Management" icon="calendar-days" href="/features/event-management">
+    Configure events to capture optimal analytics data
+  </Card>
+  <Card title="Sustainability Metrics" icon="leaf" href="/features/sustainability-metrics">
+    Learn what environmental data is tracked
+  </Card>
+  <Card title="Attendee Tracking" icon="users" href="/features/attendee-tracking">
+    Understand attendee data collection
+  </Card>
+  <Card title="API Documentation" icon="code" href="/api-reference">
+    Access analytics programmatically
+  </Card>
+</CardGroup>

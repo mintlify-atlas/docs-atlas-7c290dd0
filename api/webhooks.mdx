@@ -1,0 +1,673 @@
+---
+title: 'Webhooks API'
+description: 'Configure real-time event notifications via webhooks'
+icon: 'webhook'
+---
+
+## Overview
+
+The Webhooks API allows you to receive real-time notifications about events in your EcoEvents account. Configure webhook endpoints to be notified when events are created, updated, attendees register, sustainability goals are achieved, and more.
+
+## Authentication
+
+All API requests require an API key to be included in the header:
+
+```bash
+Authorization: Bearer YOUR_API_KEY
+```
+
+---
+
+## Create Webhook
+
+<Card title="POST /api/webhooks" icon="plus">
+  Register a new webhook endpoint to receive event notifications.
+</Card>
+
+### Request
+
+<ParamField path="url" type="string" required>
+  The HTTPS URL where webhook payloads will be sent. Must use HTTPS protocol.
+</ParamField>
+
+<ParamField path="events" type="array" required>
+  Array of event types to subscribe to. See [Event Types](#event-types) for available options.
+</ParamField>
+
+<ParamField path="description" type="string">
+  Optional description for this webhook
+</ParamField>
+
+<ParamField path="secret" type="string">
+  Optional secret for webhook signature verification. If not provided, one will be generated.
+</ParamField>
+
+<ParamField path="active" type="boolean" default="true">
+  Whether the webhook is active
+</ParamField>
+
+<ParamField path="metadata" type="object">
+  Optional metadata as key-value pairs
+</ParamField>
+
+### Response
+
+<ResponseField name="id" type="string">
+  Unique identifier for the webhook
+</ResponseField>
+
+<ResponseField name="url" type="string">
+  The webhook endpoint URL
+</ResponseField>
+
+<ResponseField name="events" type="array">
+  Subscribed event types
+</ResponseField>
+
+<ResponseField name="description" type="string">
+  Webhook description
+</ResponseField>
+
+<ResponseField name="secret" type="string">
+  Secret for signature verification (shown only once during creation)
+</ResponseField>
+
+<ResponseField name="active" type="boolean">
+  Whether the webhook is active
+</ResponseField>
+
+<ResponseField name="metadata" type="object">
+  Custom metadata
+</ResponseField>
+
+<ResponseField name="createdAt" type="string">
+  Timestamp when webhook was created
+</ResponseField>
+
+<ResponseField name="updatedAt" type="string">
+  Timestamp when webhook was last updated
+</ResponseField>
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://api.ecoevents.com/api/webhooks \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-domain.com/webhook-handler",
+    "events": [
+      "event.created",
+      "event.updated",
+      "attendee.registered",
+      "sustainability.goal_achieved"
+    ],
+    "description": "Production webhook for event notifications",
+    "metadata": {
+      "environment": "production",
+      "team": "events"
+    }
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.ecoevents.com/api/webhooks', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    url: 'https://your-domain.com/webhook-handler',
+    events: [
+      'event.created',
+      'event.updated',
+      'attendee.registered',
+      'sustainability.goal_achieved'
+    ],
+    description: 'Production webhook for event notifications',
+    metadata: {
+      environment: 'production',
+      team: 'events'
+    }
+  })
+});
+
+const webhook = await response.json();
+console.log('Webhook secret:', webhook.secret); // Save this securely!
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/webhooks'
+headers = {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+}
+data = {
+    'url': 'https://your-domain.com/webhook-handler',
+    'events': [
+        'event.created',
+        'event.updated',
+        'attendee.registered',
+        'sustainability.goal_achieved'
+    ],
+    'description': 'Production webhook for event notifications',
+    'metadata': {
+        'environment': 'production',
+        'team': 'events'
+    }
+}
+
+response = requests.post(url, headers=headers, json=data)
+webhook = response.json()
+print(f"Webhook secret: {webhook['secret']}")  # Save this securely!
+```
+
+</CodeGroup>
+
+### Response Example
+
+```json
+{
+  "id": "wh_9m8n7o6p5q4r",
+  "url": "https://your-domain.com/webhook-handler",
+  "events": [
+    "event.created",
+    "event.updated",
+    "attendee.registered",
+    "sustainability.goal_achieved"
+  ],
+  "description": "Production webhook for event notifications",
+  "secret": "whsec_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "active": true,
+  "metadata": {
+    "environment": "production",
+    "team": "events"
+  },
+  "createdAt": "2026-03-05T12:00:00Z",
+  "updatedAt": "2026-03-05T12:00:00Z"
+}
+```
+
+<Warning>
+  The webhook `secret` is only shown once during creation. Store it securely as you'll need it to verify webhook signatures.
+</Warning>
+
+---
+
+## List Webhooks
+
+<Card title="GET /api/webhooks" icon="list">
+  Retrieve all configured webhooks for your account.
+</Card>
+
+### Query Parameters
+
+<ParamField query="active" type="boolean">
+  Filter by active status
+</ParamField>
+
+<ParamField query="page" type="integer" default="1">
+  Page number for pagination
+</ParamField>
+
+<ParamField query="limit" type="integer" default="20">
+  Number of webhooks per page (max 100)
+</ParamField>
+
+### Response
+
+<ResponseField name="webhooks" type="array">
+  Array of webhook objects (without secrets)
+</ResponseField>
+
+<ResponseField name="pagination" type="object">
+  Pagination information
+</ResponseField>
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET "https://api.ecoevents.com/api/webhooks?active=true" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.ecoevents.com/api/webhooks?active=true', {
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/webhooks'
+headers = {'Authorization': 'Bearer YOUR_API_KEY'}
+params = {'active': True}
+
+response = requests.get(url, headers=headers, params=params)
+data = response.json()
+print(data)
+```
+
+</CodeGroup>
+
+---
+
+## Delete Webhook
+
+<Card title="DELETE /api/webhooks/:id" icon="trash">
+  Remove a webhook endpoint. This action cannot be undone.
+</Card>
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the webhook to delete
+</ParamField>
+
+### Response
+
+<ResponseField name="success" type="boolean">
+  Indicates whether the deletion was successful
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  Confirmation message
+</ResponseField>
+
+<ResponseField name="deletedId" type="string">
+  The ID of the deleted webhook
+</ResponseField>
+
+### Example
+
+<CodeGroup>
+
+```bash cURL
+curl -X DELETE https://api.ecoevents.com/api/webhooks/wh_9m8n7o6p5q4r \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.ecoevents.com/api/webhooks/wh_9m8n7o6p5q4r', {
+  method: 'DELETE',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY'
+  }
+});
+
+const result = await response.json();
+console.log(result);
+```
+
+```python Python
+import requests
+
+url = 'https://api.ecoevents.com/api/webhooks/wh_9m8n7o6p5q4r'
+headers = {'Authorization': 'Bearer YOUR_API_KEY'}
+
+response = requests.delete(url, headers=headers)
+result = response.json()
+print(result)
+```
+
+</CodeGroup>
+
+---
+
+## Event Types
+
+### Available Event Types
+
+Subscribe to the following event types when creating webhooks:
+
+#### Event Events
+
+<ParamField path="event.created" type="event">
+  Triggered when a new event is created
+</ParamField>
+
+<ParamField path="event.updated" type="event">
+  Triggered when an event is updated
+</ParamField>
+
+<ParamField path="event.deleted" type="event">
+  Triggered when an event is deleted
+</ParamField>
+
+<ParamField path="event.published" type="event">
+  Triggered when an event status changes to published
+</ParamField>
+
+<ParamField path="event.cancelled" type="event">
+  Triggered when an event is cancelled
+</ParamField>
+
+<ParamField path="event.completed" type="event">
+  Triggered when an event is marked as completed
+</ParamField>
+
+#### Attendee Events
+
+<ParamField path="attendee.registered" type="event">
+  Triggered when a new attendee registers
+</ParamField>
+
+<ParamField path="attendee.updated" type="event">
+  Triggered when attendee information is updated
+</ParamField>
+
+<ParamField path="attendee.cancelled" type="event">
+  Triggered when an attendee cancels their registration
+</ParamField>
+
+<ParamField path="attendee.checked_in" type="event">
+  Triggered when an attendee checks in at the event
+</ParamField>
+
+#### Sustainability Events
+
+<ParamField path="sustainability.goal_achieved" type="event">
+  Triggered when a sustainability goal is achieved
+</ParamField>
+
+<ParamField path="sustainability.carbon_offset" type="event">
+  Triggered when a carbon offset contribution is made
+</ParamField>
+
+<ParamField path="sustainability.report_generated" type="event">
+  Triggered when a sustainability report is generated
+</ParamField>
+
+#### Analytics Events
+
+<ParamField path="analytics.report_ready" type="event">
+  Triggered when an analytics report is ready
+</ParamField>
+
+<ParamField path="analytics.threshold_exceeded" type="event">
+  Triggered when a configured metric threshold is exceeded
+</ParamField>
+
+---
+
+## Webhook Payload Structure
+
+All webhook requests include the following structure:
+
+### Headers
+
+```
+Content-Type: application/json
+X-EcoEvents-Signature: sha256=<signature>
+X-EcoEvents-Event: <event_type>
+X-EcoEvents-Delivery: <unique_delivery_id>
+User-Agent: EcoEvents-Webhooks/1.0
+```
+
+### Payload
+
+```json
+{
+  "id": "evt_delivery_123abc",
+  "type": "event.created",
+  "createdAt": "2026-03-05T12:30:00Z",
+  "data": {
+    // Event-specific payload
+  },
+  "account": {
+    "id": "acc_xyz789",
+    "name": "Your Organization"
+  }
+}
+```
+
+---
+
+## Event Payload Examples
+
+### event.created
+
+```json
+{
+  "id": "evt_delivery_123abc",
+  "type": "event.created",
+  "createdAt": "2026-03-05T12:30:00Z",
+  "data": {
+    "event": {
+      "id": "evt_1a2b3c4d5e6f",
+      "name": "Sustainable Tech Summit 2026",
+      "startDate": "2026-06-15T09:00:00Z",
+      "endDate": "2026-06-17T18:00:00Z",
+      "location": {
+        "city": "San Francisco",
+        "country": "US"
+      },
+      "status": "draft"
+    }
+  },
+  "account": {
+    "id": "acc_xyz789",
+    "name": "GreenTech Events"
+  }
+}
+```
+
+### attendee.registered
+
+```json
+{
+  "id": "evt_delivery_456def",
+  "type": "attendee.registered",
+  "createdAt": "2026-03-05T13:15:00Z",
+  "data": {
+    "attendee": {
+      "id": "att_7g8h9i0j1k2l",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "email": "jane.smith@example.com",
+      "ticketType": "general",
+      "carbonOffset": {
+        "opted": true,
+        "amount": 25.00
+      }
+    },
+    "event": {
+      "id": "evt_1a2b3c4d5e6f",
+      "name": "Sustainable Tech Summit 2026"
+    }
+  },
+  "account": {
+    "id": "acc_xyz789",
+    "name": "GreenTech Events"
+  }
+}
+```
+
+### sustainability.goal_achieved
+
+```json
+{
+  "id": "evt_delivery_789ghi",
+  "type": "sustainability.goal_achieved",
+  "createdAt": "2026-06-17T18:30:00Z",
+  "data": {
+    "event": {
+      "id": "evt_1a2b3c4d5e6f",
+      "name": "Sustainable Tech Summit 2026"
+    },
+    "goal": {
+      "type": "carbon_neutral",
+      "achieved": true,
+      "metrics": {
+        "totalEmissions": 45800,
+        "totalOffset": 46200,
+        "percentage": 100.9
+      }
+    }
+  },
+  "account": {
+    "id": "acc_xyz789",
+    "name": "GreenTech Events"
+  }
+}
+```
+
+---
+
+## Verifying Webhook Signatures
+
+To ensure webhook requests are genuinely from EcoEvents, verify the signature in the `X-EcoEvents-Signature` header.
+
+### Verification Process
+
+1. Extract the signature from the `X-EcoEvents-Signature` header
+2. Compute HMAC SHA-256 of the raw request body using your webhook secret
+3. Compare the computed signature with the received signature
+
+### Example Implementation
+
+<CodeGroup>
+
+```javascript Node.js
+const crypto = require('crypto');
+
+function verifyWebhookSignature(payload, signature, secret) {
+  const expectedSignature = 'sha256=' + 
+    crypto
+      .createHmac('sha256', secret)
+      .update(payload)
+      .digest('hex');
+  
+  return crypto.timingSafeEqual(
+    Buffer.from(signature),
+    Buffer.from(expectedSignature)
+  );
+}
+
+// Express.js example
+app.post('/webhook-handler', express.raw({ type: 'application/json' }), (req, res) => {
+  const signature = req.headers['x-ecoevents-signature'];
+  const payload = req.body;
+  
+  if (!verifyWebhookSignature(payload, signature, process.env.WEBHOOK_SECRET)) {
+    return res.status(401).send('Invalid signature');
+  }
+  
+  const event = JSON.parse(payload);
+  // Process webhook event
+  
+  res.status(200).send('OK');
+});
+```
+
+```python Python
+import hmac
+import hashlib
+from flask import Flask, request, abort
+
+app = Flask(__name__)
+
+def verify_webhook_signature(payload, signature, secret):
+    expected_signature = 'sha256=' + hmac.new(
+        secret.encode('utf-8'),
+        payload,
+        hashlib.sha256
+    ).hexdigest()
+    
+    return hmac.compare_digest(signature, expected_signature)
+
+@app.route('/webhook-handler', methods=['POST'])
+def webhook_handler():
+    signature = request.headers.get('X-EcoEvents-Signature')
+    payload = request.get_data()
+    
+    if not verify_webhook_signature(payload, signature, WEBHOOK_SECRET):
+        abort(401, 'Invalid signature')
+    
+    event = request.get_json()
+    # Process webhook event
+    
+    return 'OK', 200
+```
+
+</CodeGroup>
+
+---
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Use HTTPS" icon="lock">
+    Always use HTTPS URLs for webhook endpoints to ensure data security.
+  </Card>
+  
+  <Card title="Verify Signatures" icon="shield-check">
+    Always verify webhook signatures to prevent unauthorized requests.
+  </Card>
+  
+  <Card title="Respond Quickly" icon="bolt">
+    Return a 200 status code within 5 seconds to acknowledge receipt.
+  </Card>
+  
+  <Card title="Process Async" icon="clock">
+    Process webhook payloads asynchronously to avoid timeouts.
+  </Card>
+</CardGroup>
+
+### Retry Logic
+
+EcoEvents will retry failed webhook deliveries:
+- Immediate retry on timeout or 5xx error
+- 3 additional retries with exponential backoff (1min, 10min, 1hr)
+- Webhooks are disabled after 10 consecutive failures
+
+### Idempotency
+
+Webhook events may be delivered more than once. Use the unique `id` field to implement idempotency in your webhook handler.
+
+---
+
+## Error Responses
+
+<ResponseField name="error" type="object">
+  Error details
+  
+  <Expandable title="properties">
+    <ResponseField name="code" type="string">
+      Error code (e.g., "INVALID_URL", "INVALID_EVENT_TYPE", "UNAUTHORIZED")
+    </ResponseField>
+    <ResponseField name="message" type="string">
+      Human-readable error message
+    </ResponseField>
+    <ResponseField name="details" type="object">
+      Additional error context (optional)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Common Error Codes
+
+| Status Code | Error Code | Description |
+|-------------|------------|-------------|
+| 400 | INVALID_REQUEST | Invalid request parameters |
+| 400 | INVALID_URL | URL must use HTTPS protocol |
+| 400 | INVALID_EVENT_TYPE | One or more event types are invalid |
+| 401 | UNAUTHORIZED | Missing or invalid API key |
+| 403 | FORBIDDEN | Insufficient permissions |
+| 404 | NOT_FOUND | Webhook not found |
+| 409 | DUPLICATE_WEBHOOK | Webhook with this URL already exists |
+| 429 | RATE_LIMIT_EXCEEDED | Too many requests |
+| 500 | INTERNAL_ERROR | Server error |

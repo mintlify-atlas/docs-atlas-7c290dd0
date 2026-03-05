@@ -1,0 +1,561 @@
+---
+title: 'Sustainability Metrics'
+description: 'Track, measure, and optimize your events environmental impact with comprehensive carbon, waste, and resource monitoring'
+icon: 'leaf'
+---
+
+## Overview
+
+EcoEvents provides industry-leading sustainability tracking that turns environmental goals into measurable outcomes. Our comprehensive metrics system helps you understand, reduce, and communicate the environmental impact of every event.
+
+<CardGroup cols={2}>
+  <Card title="Carbon Footprint" icon="cloud">
+    Track CO2e emissions from venue, travel, catering, and operations
+  </Card>
+  <Card title="Waste Management" icon="recycle">
+    Monitor waste generation, diversion rates, and recycling effectiveness
+  </Card>
+  <Card title="Energy & Water" icon="bolt">
+    Measure resource consumption and efficiency in real-time
+  </Card>
+  <Card title="Vendor Compliance" icon="certificate">
+    Verify eco-friendly supplier claims with documentation tracking
+  </Card>
+</CardGroup>
+
+## Carbon Footprint Tracking
+
+### Emission Sources
+
+EcoEvents calculates emissions across all major event components:
+
+<Tabs>
+  <Tab title="Venue Operations">
+    **Venue-Related Emissions:**
+
+    - **Electricity Usage** - Lighting, HVAC, AV equipment, charging stations
+    - **Heating & Cooling** - Climate control systems throughout event
+    - **Infrastructure** - Temporary structures, staging, equipment rentals
+    - **Venue Baseline** - Building operational emissions allocated per attendee
+
+    **Calculation Method:**
+    ```javascript
+    venueEmissions = (
+      (kWhUsed * electricityEmissionFactor) +
+      (thermsUsed * gasEmissionFactor) +
+      (infrastructureFootprint / attendeeCount)
+    )
+    ```
+
+    Real-time monitoring through smart meters provides accurate usage data rather than estimates.
+
+    <Note>
+      Venues with renewable energy certificates can significantly reduce this component. We verify renewable energy claims through documentation.
+    </Note>
+  </Tab>
+  <Tab title="Attendee Travel">
+    **Transportation Analysis:**
+
+    The largest emission source for most events. We calculate based on:
+
+    - **Registration Data** - Transportation method selection
+    - **Distance Calculation** - From attendee zip code to venue
+    - **Emission Factors** - Mode-specific CO2e per passenger-mile:
+      - Air travel: 0.24 kg CO2e/mile
+      - Personal vehicle: 0.41 kg CO2e/mile (single occupancy)
+      - Carpool: 0.14 kg CO2e/mile (3 passengers)
+      - Bus/train: 0.06 kg CO2e/mile
+      - Bicycle/walk: 0 kg CO2e
+
+    **Travel Breakdown Dashboard:**
+    - Percentage by mode (pie chart)
+    - Total miles traveled by all attendees
+    - Average emissions per attendee
+    - Comparison to baseline (all-drive scenario)
+    - Green travel incentive effectiveness
+
+    <Warning>
+      Air travel typically accounts for 60-80% of total event carbon footprint. Consider virtual attendance options for distant participants.
+    </Warning>
+  </Tab>
+  <Tab title="Catering & Food">
+    **Food-Related Emissions:**
+
+    Track emissions from meals and beverages:
+
+    - **Menu Carbon Intensity** - Calculated per meal type:
+      - Plant-based: 1.5 kg CO2e per meal
+      - Vegetarian: 2.5 kg CO2e per meal
+      - Chicken/fish: 4.5 kg CO2e per meal
+      - Beef/lamb: 8.5 kg CO2e per meal
+    - **Food Miles** - Transportation distance from source
+    - **Seasonality Factor** - Off-season produce has higher impact
+    - **Waste Multiplier** - Food waste increases effective emissions
+
+    **Impact of Menu Choices:**
+    A 500-person event switching from mixed meat to plant-based catering saves approximately 3,500 kg CO2e - equivalent to driving a car 8,750 miles.
+
+    Monitor in real-time:
+    - Meal selection breakdown (% plant-based, vegetarian, meat)
+    - Local sourcing percentage
+    - Organic certification coverage
+    - Food waste generation (see Waste Tracking)
+  </Tab>
+  <Tab title="Materials & Waste">
+    **Event Materials:**
+
+    Track emissions from physical materials:
+
+    - **Signage** - Production and disposal of banners, posters, directional signs
+    - **Printed Materials** - Programs, schedules, promotional items
+    - **Swag & Merchandise** - T-shirts, bags, promotional products
+    - **Packaging** - Shipping materials, food containers, beverage cups
+    - **Decorations** - Temporary installations and theming elements
+
+    **Emission Factors:**
+    ```json
+    {
+      "paper_recycled": "0.9 kg CO2e per kg",
+      "paper_virgin": "1.8 kg CO2e per kg",
+      "plastic_single_use": "6.0 kg CO2e per kg",
+      "textile_cotton": "15.0 kg CO2e per kg",
+      "textile_recycled_polyester": "6.5 kg CO2e per kg"
+    }
+    ```
+
+    Digital-first strategy can reduce materials emissions by 90%+.
+  </Tab>
+</Tabs>
+
+### Carbon Offset Programs
+
+EcoEvents integrates with verified carbon offset providers:
+
+<CardGroup cols={3}>
+  <Card title="Reforestation" icon="tree">
+    Plant trees to sequester CO2 over long-term growth cycles
+  </Card>
+  <Card title="Renewable Energy" icon="solar-panel">
+    Fund wind, solar, and hydro projects displacing fossil fuels
+  </Card>
+  <Card title="Direct Air Capture" icon="wind">
+    Support emerging technologies that remove CO2 from atmosphere
+  </Card>
+</CardGroup>
+
+**Offset Configuration:**
+
+<Accordion title="Automatic Carbon Offset Collection">
+  Enable carbon offset as part of registration:
+  - Calculate total event emissions estimate
+  - Add optional offset fee to registration (typically $3-15 per attendee)
+  - Provide transparency on offset projects and certification
+  - Display running total of tons offset
+  - Issue tax receipts where applicable
+
+  Average opt-in rates:
+  - When presented as optional add-on: 35-45%
+  - When included by default with opt-out: 85-92%
+  - When incentivized with recognition: 60-70%
+</Accordion>
+
+<Accordion title="Organization-Sponsored Offsets">
+  Cover emissions for all attendees:
+  - Calculate total event footprint
+  - Purchase offsets in bulk (better pricing)
+  - Market as "Carbon Neutral Event"
+  - Provide certificate to attendees
+  - Include offset cost in overall event budget
+
+  <Note>
+    Organization-sponsored offsets demonstrate strong environmental commitment and eliminate attendee decision fatigue.
+  </Note>
+</Accordion>
+
+<Accordion title="Offset Verification">
+  All offset projects are verified against standards:
+  - **Gold Standard** - Highest quality, sustainable development focus
+  - **Verified Carbon Standard (VCS)** - Rigorous project validation
+  - **Climate Action Reserve** - North American projects
+  - **American Carbon Registry** - Diverse project types
+
+  View project details, locations, and impact reports directly in the platform.
+</Accordion>
+
+### Carbon Dashboard
+
+Visualize your event's carbon footprint:
+
+- **Total Emissions** - Large display with historical comparison
+- **Source Breakdown** - Pie chart showing venue, travel, food, materials
+- **Per-Attendee Average** - Benchmark against industry standards
+- **Reduction from Baseline** - Percentage improvement from traditional approach
+- **Offset Status** - Progress toward carbon neutral/negative goals
+- **Trend Analysis** - Compare across multiple events for continuous improvement
+
+## Waste Management Tracking
+
+### Waste Stream Monitoring
+
+Track waste generation and diversion across categories:
+
+<Tabs>
+  <Tab title="Collection & Sorting">
+    **Waste Station Setup:**
+
+    Configure waste collection infrastructure:
+    - Number and location of sorting stations
+    - Container types (recycling, compost, landfill)
+    - Clear signage with visual guides
+    - Contamination monitoring
+    - Staff or volunteer waste ambassadors
+
+    **Real-Time Tracking:**
+    - Weight or volume measurements at collection
+    - Categorization by waste type
+    - Contamination rate alerts
+    - Diversion rate calculation
+    - Hour-by-hour generation patterns
+
+    Mobile app for waste crew:
+    ```javascript
+    // Log waste collection
+    await ecoEvents.waste.log({
+      eventId: 'evt_12345',
+      stationId: 'station_08',
+      timestamp: '2026-03-05T14:30:00Z',
+      containers: [
+        { type: 'recycling', weight_lbs: 45, contamination: 'low' },
+        { type: 'compost', weight_lbs: 120, contamination: 'medium' },
+        { type: 'landfill', weight_lbs: 18, contamination: null }
+      ]
+    });
+    ```
+  </Tab>
+  <Tab title="Food Waste">
+    **Pre-Consumer Waste:**
+    - Preparation scraps and trimmings
+    - Surplus prepared food
+    - Expired or damaged ingredients
+
+    **Post-Consumer Waste:**
+    - Plate waste from attendees
+    - Untouched served food
+    - Beverage waste
+
+    **Reduction Strategies:**
+    - Accurate forecasting reduces prep waste
+    - Smaller portion sizes with seconds option
+    - Real-time attendance tracking prevents over-ordering
+    - Donation programs for surplus food
+    - Composting all organic waste
+
+    **Impact Metrics:**
+    - Total food waste weight and percentage
+    - Cost of wasted food
+    - Meals that could have been provided
+    - Composting vs. landfill destination
+    - Methane emissions avoided through composting
+
+    <Note>
+      Food waste typically represents 40-60% of total event waste by weight. Composting diverts this from landfills and prevents methane generation.
+    </Note>
+  </Tab>
+  <Tab title="Recycling & Materials">
+    **Recyclable Materials:**
+    - Paper products (programs, name tags, signage)
+    - Cardboard (shipping boxes, displays)
+    - Plastic containers (bottles, cups, food containers)
+    - Aluminum cans
+    - Glass bottles
+
+    **Material Recovery:**
+    Track what gets recycled vs. contaminated:
+    - Clean recycling percentage
+    - Contamination rates by material type
+    - Vendor compliance with recyclable packaging
+    - Reusable material recovery (lanyards, badge holders)
+
+    **Circularity Metrics:**
+    - Percentage of recycled content in materials used
+    - Reusability rate of event materials
+    - Closed-loop vendor partnerships
+    - Material recovery for future events
+  </Tab>
+  <Tab title="Zero Waste Certification">
+    **Zero Waste Goals:**
+
+    Track progress toward zero waste certification:
+    - **90% Diversion** - Bronze certification
+    - **95% Diversion** - Silver certification
+    - **98% Diversion** - Gold certification
+    - **100% Diversion** - Platinum certification
+
+    **Requirements:**
+    - Comprehensive waste audit
+    - Documented weight/volume measurements
+    - Destination verification for all waste streams
+    - Contamination rates below thresholds
+    - Staff training documentation
+    - Attendee education proof
+
+    EcoEvents integrates with TRUE Zero Waste certification process.
+  </Tab>
+</Tabs>
+
+### Waste Analytics
+
+Comprehensive waste performance reporting:
+
+- **Diversion Rate** - Percentage of waste diverted from landfill
+- **Waste Per Attendee** - Benchmark metric for efficiency
+- **Cost Analysis** - Waste management costs and potential savings
+- **Contamination Tracking** - Quality of sorting and education effectiveness
+- **Comparison Reports** - Performance vs. similar events and industry averages
+
+## Energy & Resource Monitoring
+
+### Energy Consumption
+
+Real-time energy tracking through smart meters:
+
+<Accordion title="Electricity Monitoring">
+  Track electrical usage throughout your event:
+
+  **Measured Components:**
+  - Lighting systems (ambient, stage, decorative)
+  - HVAC (heating, ventilation, air conditioning)
+  - Audio-visual equipment
+  - Kitchen and catering equipment
+  - Charging stations
+  - Temporary power for vendors
+
+  **Analytics:**
+  - kWh consumption by hour and by zone
+  - Peak demand periods
+  - Efficiency recommendations
+  - Renewable energy percentage (if applicable)
+  - Cost and carbon emissions attribution
+  - Comparison to venue baseline
+
+  Smart recommendations:
+  - Optimize HVAC schedules based on occupancy
+  - Reduce lighting in unoccupied zones
+  - Time-shift energy-intensive activities to off-peak
+</Accordion>
+
+<Accordion title="Water Usage">
+  Monitor water consumption:
+
+  **Tracking Points:**
+  - Restroom facilities
+  - Kitchen and food prep
+  - Beverage service
+  - Cleaning and sanitation
+  - Landscaping and outdoor spaces
+
+  **Metrics:**
+  - Total gallons consumed
+  - Gallons per attendee
+  - Comparison to venue baseline
+  - Water-efficient fixture effectiveness
+  - Recycled water usage (if available)
+
+  <Note>
+    Events use an average of 5-8 gallons per attendee per day. Water-efficient venues can reduce this to 2-3 gallons.
+  </Note>
+</Accordion>
+
+<Accordion title="Renewable Energy Integration">
+  Track and verify renewable energy usage:
+
+  **On-Site Generation:**
+  - Solar panel output monitoring
+  - Wind turbine production
+  - Combined heat and power systems
+
+  **Renewable Energy Certificates (RECs):**
+  - Verify venue's renewable energy claims
+  - Purchase additional RECs to cover event usage
+  - Track certificate serial numbers and retirement
+  - Calculate effective carbon reduction
+
+  **Battery Storage:**
+  - Monitor stored renewable energy usage
+  - Optimize discharge timing for peak demand
+  - Calculate avoided grid electricity
+</Accordion>
+
+### Resource Efficiency Scores
+
+Benchmark your event against industry standards:
+
+- **Energy Efficiency Score** - kWh per attendee vs. average
+- **Water Efficiency Score** - Gallons per attendee vs. average
+- **Resource Intensity** - Overall resource consumption rating
+- **Improvement Tracking** - Progress across multiple events
+
+## Vendor Sustainability Compliance
+
+### Vendor Certification Tracking
+
+Ensure your vendors meet sustainability commitments:
+
+<CardGroup cols={2}>
+  <Card title="Documentation Collection" icon="file-certificate">
+    Gather and verify sustainability certifications:
+    - Environmental certifications (B Corp, Green Business, ISO 14001)
+    - Organic and fair-trade certifications for food vendors
+    - Sustainable sourcing documentation
+    - Carbon neutral claims with offset verification
+    - Waste management and recycling practices
+  </Card>
+  <Card title="Performance Monitoring" icon="chart-line">
+    Track vendor sustainability performance:
+    - On-time documentation submission
+    - Compliance with event sustainability requirements
+    - Waste generation and management
+    - Material sustainability (packaging, products)
+    - Transportation emissions
+  </Card>
+</CardGroup>
+
+### Vendor Scorecards
+
+Rate vendors on sustainability criteria:
+
+```json
+{
+  "vendorName": "Green Catering Co",
+  "category": "Food & Beverage",
+  "sustainabilityScore": 92,
+  "breakdown": {
+    "certifications": 95,
+    "localSourcing": 88,
+    "wasteManagement": 90,
+    "packaging": 94,
+    "carbonFootprint": 91
+  },
+  "recommendations": [
+    "Increase percentage of organic ingredients",
+    "Switch to 100% compostable serving ware"
+  ],
+  "preferredVendor": true
+}
+```
+
+Build a preferred vendor network based on sustainability performance.
+
+## Sustainability Reporting
+
+### Impact Reports
+
+Generate comprehensive sustainability reports:
+
+<Tabs>
+  <Tab title="Executive Summary">
+    One-page overview for stakeholders:
+    - Total carbon footprint and offset status
+    - Waste diversion rate and achievements
+    - Energy and water efficiency
+    - Cost savings from sustainable practices
+    - Key accomplishments and records
+    - Comparison to previous events
+  </Tab>
+  <Tab title="Detailed Analytics">
+    In-depth analysis for sustainability team:
+    - Complete methodology and calculations
+    - Data sources and verification
+    - Category-by-category breakdown
+    - Attendee behavior analysis
+    - Vendor performance evaluation
+    - Improvement recommendations
+    - Industry benchmarking
+  </Tab>
+  <Tab title="Public Marketing Report">
+    Shareable report for promotion:
+    - Infographic-style visualizations
+    - Compelling statistics and achievements
+    - Attendee testimonials
+    - Social media graphics
+    - Press release template
+    - Case study format
+  </Tab>
+  <Tab title="Certification Documentation">
+    Reports formatted for sustainability certifications:
+    - ISO 20121 (Event Sustainability Management)
+    - TRUE Zero Waste Certification
+    - LEED Event Credits
+    - Carbon Trust Standard
+    - Custom certification requirements
+  </Tab>
+</Tabs>
+
+### Real-Time Public Dashboards
+
+Engage attendees with live sustainability metrics:
+
+- Large displays showing running totals
+- Gamification and milestone celebrations
+- Leaderboard for attendee sustainability choices
+- QR codes linking to detailed information
+- Social media integration for sharing impact
+
+<Note>
+  Events that display real-time sustainability metrics see 25-40% higher attendee engagement with green initiatives.
+</Note>
+
+## Best Practices
+
+<Accordion title="Measure Everything from Day One">
+  You can't improve what you don't measure:
+  - Enable all tracking features before the event starts
+  - Establish baseline measurements for comparison
+  - Set up automated data collection
+  - Train staff on measurement protocols
+  - Build measurement time into event timeline
+</Accordion>
+
+<Accordion title="Set Realistic Goals">
+  Ambitious but achievable targets:
+  - Start with industry averages, then improve
+  - Consider event type and constraints
+  - Balance sustainability with attendee experience
+  - Celebrate incremental improvements
+  - Focus on highest-impact areas first
+</Accordion>
+
+<Accordion title="Communicate Impact">
+  Share your sustainability success:
+  - Be transparent about both successes and challenges
+  - Use compelling visualizations and stories
+  - Recognize attendees' contribution to impact
+  - Provide context ("Equivalent to planting X trees")
+  - Share learnings to help other event organizers
+</Accordion>
+
+<Accordion title="Continuous Improvement">
+  Build on each event:
+  - Review post-event reports thoroughly
+  - Implement lessons learned in next event
+  - Track progress across event series
+  - Update vendor standards based on performance
+  - Stay current with emerging best practices
+</Accordion>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Event Management" icon="calendar-days" href="/features/event-management">
+    Set sustainability goals during event creation
+  </Card>
+  <Card title="Analytics Dashboard" icon="chart-mixed" href="/features/analytics">
+    Visualize and analyze sustainability data
+  </Card>
+  <Card title="Attendee Tracking" icon="users" href="/features/attendee-tracking">
+    Track attendee sustainability choices and behavior
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference">
+    Access sustainability metrics programmatically
+  </Card>
+</CardGroup>

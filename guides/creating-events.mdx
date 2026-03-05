@@ -1,0 +1,334 @@
+---
+title: Creating Events
+description: Step-by-step guide to create and publish sustainable events on EcoEvents
+---
+
+Learn how to create an event, set sustainability goals, configure event settings, and publish your event to start accepting registrations.
+
+## Overview
+
+Creating an event on EcoEvents involves four main stages:
+1. Setting up basic event information
+2. Configuring sustainability goals
+3. Customizing event settings
+4. Publishing and promoting your event
+
+<Note>
+All events on EcoEvents are designed with sustainability in mind. You'll be guided through setting environmental impact goals throughout the creation process.
+</Note>
+
+## Creating Your First Event
+
+<Steps>
+  <Step title="Navigate to Create Event">
+    From your dashboard, click the **Create Event** button in the top right corner, or navigate to the Events section and select **New Event**.
+  </Step>
+
+  <Step title="Enter Basic Event Information">
+    Fill in the essential details for your event:
+
+    - **Event Name**: Choose a clear, descriptive name
+    - **Event Type**: Select from Conference, Workshop, Webinar, Festival, or Networking
+    - **Date & Time**: Set start and end times (supports multiple time zones)
+    - **Location**: Enter venue address or select "Virtual Event"
+    - **Capacity**: Set maximum attendee limit
+
+    ```json
+    {
+      "name": "Green Tech Summit 2026",
+      "type": "conference",
+      "startDate": "2026-06-15T09:00:00Z",
+      "endDate": "2026-06-17T18:00:00Z",
+      "location": {
+        "type": "venue",
+        "address": "123 Sustainability Ave, Portland, OR",
+        "venue": "Portland Convention Center"
+      },
+      "capacity": 500
+    }
+    ```
+
+    <Tip>
+    Virtual and hybrid events automatically have a lower carbon footprint. EcoEvents will calculate this advantage for you.
+    </Tip>
+  </Step>
+
+  <Step title="Add Event Description and Details">
+    Create a compelling description that highlights:
+
+    - Event purpose and objectives
+    - Target audience
+    - Key topics or activities
+    - Sustainability initiatives
+
+    Use the rich text editor to format your content, add images, and embed videos.
+  </Step>
+
+  <Step title="Configure Registration Settings">
+    Set up how attendees will register:
+
+    - **Registration Type**: Free, Paid, or Tiered pricing
+    - **Early Bird Discounts**: Optional time-limited pricing
+    - **Registration Deadline**: Set cutoff date
+    - **Required Information**: Select fields (name, email, company, dietary preferences)
+    - **Custom Questions**: Add event-specific questions
+
+    ```javascript
+    const registrationConfig = {
+      type: 'tiered',
+      tiers: [
+        {
+          name: 'Early Bird',
+          price: 199,
+          available: 100,
+          deadline: '2026-04-15'
+        },
+        {
+          name: 'Standard',
+          price: 299,
+          available: 300,
+          deadline: '2026-06-01'
+        },
+        {
+          name: 'Last Minute',
+          price: 399,
+          available: 100
+        }
+      ],
+      requiredFields: ['name', 'email', 'company', 'dietaryPreferences'],
+      customQuestions: [
+        {
+          question: 'How did you hear about this event?',
+          type: 'multipleChoice',
+          options: ['Social Media', 'Email', 'Colleague', 'Other']
+        }
+      ]
+    };
+    ```
+  </Step>
+</Steps>
+
+## Setting Sustainability Goals
+
+<Steps>
+  <Step title="Access Sustainability Settings">
+    Navigate to the **Sustainability** tab in your event creation workflow. This is where you'll define your environmental impact goals.
+  </Step>
+
+  <Step title="Set Carbon Reduction Targets">
+    Define your carbon footprint reduction goals:
+
+    - **Baseline Comparison**: Choose a previous event or industry average
+    - **Reduction Target**: Set percentage reduction goal (e.g., 30% reduction)
+    - **Focus Areas**: Select priority areas (travel, energy, waste, catering)
+
+    ```typescript
+    interface SustainabilityGoals {
+      baselineEvent?: string;
+      carbonReductionTarget: number; // percentage
+      focusAreas: Array<'travel' | 'energy' | 'waste' | 'catering'>;
+      certificationTarget?: 'ISO20121' | 'CarbonNeutral' | 'NetZero';
+    }
+
+    const goals: SustainabilityGoals = {
+      carbonReductionTarget: 35,
+      focusAreas: ['travel', 'energy', 'catering'],
+      certificationTarget: 'CarbonNeutral'
+    };
+    ```
+  </Step>
+
+  <Step title="Configure Green Initiatives">
+    Enable and configure sustainability features:
+
+    - **Digital-First Policy**: Eliminate printed materials
+    - **Local Sourcing**: Prioritize local vendors and caterers
+    - **Zero Waste Target**: Set waste diversion goals
+    - **Green Transportation**: Encourage public transit, carpools, bike parking
+    - **Renewable Energy**: Request venue uses renewable energy sources
+
+    <Note>
+    Each initiative you enable provides attendees with specific actions they can take to support your sustainability goals.
+    </Note>
+  </Step>
+
+  <Step title="Set Up Impact Tracking">
+    Choose which metrics to track:
+
+    - Attendee travel emissions
+    - Venue energy consumption
+    - Waste generated and diverted
+    - Water usage
+    - Catering food miles
+
+    EcoEvents will automatically collect this data throughout your event lifecycle.
+  </Step>
+</Steps>
+
+## Configuring Advanced Settings
+
+<Steps>
+  <Step title="Customize Event Branding">
+    Upload your event logo, select brand colors, and customize the registration page design to match your organization's identity.
+
+    ```javascript
+    const branding = {
+      logo: '/uploads/green-tech-summit-logo.png',
+      primaryColor: '#2D8B3E',
+      secondaryColor: '#7CB342',
+      customCSS: '.registration-header { background: linear-gradient(135deg, #2D8B3E, #7CB342); }'
+    };
+    ```
+  </Step>
+
+  <Step title="Set Up Email Notifications">
+    Configure automated emails:
+
+    - Registration confirmation
+    - Payment receipts
+    - Event reminders (1 week, 1 day, 1 hour before)
+    - Sustainability tips for attendees
+    - Post-event thank you with impact report
+
+    Customize email templates with your branding and messaging.
+  </Step>
+
+  <Step title="Configure Integrations">
+    Connect third-party tools:
+
+    - **Calendar Systems**: Google Calendar, Outlook, iCal
+    - **Payment Processors**: Stripe, PayPal
+    - **Communication**: Slack, Microsoft Teams
+    - **Analytics**: Google Analytics, Mixpanel
+
+    See the [Integrations Guide](/guides/integrations) for detailed setup instructions.
+  </Step>
+
+  <Step title="Set Permissions and Team Access">
+    Invite team members and assign roles:
+
+    - **Admin**: Full event management access
+    - **Editor**: Can modify event details and settings
+    - **Coordinator**: Can manage attendees and check-ins
+    - **Viewer**: Read-only access to event data
+
+    ```javascript
+    const teamMembers = [
+      { email: 'sarah@example.com', role: 'admin' },
+      { email: 'mike@example.com', role: 'coordinator' },
+      { email: 'lisa@example.com', role: 'editor' }
+    ];
+    ```
+  </Step>
+</Steps>
+
+## Publishing Your Event
+
+<Steps>
+  <Step title="Review Event Details">
+    Before publishing, review all settings:
+
+    - Verify all dates, times, and location information
+    - Test registration flow
+    - Check payment processing setup
+    - Review automated emails
+    - Confirm sustainability goals are properly configured
+
+    <Warning>
+    Once published, some settings (like event date and capacity) may have limited editability if attendees have already registered.
+    </Warning>
+  </Step>
+
+  <Step title="Preview Event Page">
+    Use the **Preview** button to see your event page as attendees will see it. Test on both desktop and mobile devices.
+  </Step>
+
+  <Step title="Publish Event">
+    When ready, click **Publish Event**. Your event will immediately become visible and open for registration.
+
+    You'll receive a confirmation with:
+    - Public event URL
+    - Registration link
+    - Embeddable widget code
+    - Social media sharing content
+  </Step>
+
+  <Step title="Promote Your Event">
+    Use the built-in promotion tools:
+
+    - Share directly to social media
+    - Copy registration link for email campaigns
+    - Download promotional graphics highlighting sustainability aspects
+    - Export attendee referral links for word-of-mouth promotion
+
+    <Tip>
+    Events with clear sustainability goals see 40% higher engagement when promoted through eco-conscious networks.
+    </Tip>
+  </Step>
+</Steps>
+
+## Event Visibility Settings
+
+Control who can discover and register for your event:
+
+- **Public**: Listed in EcoEvents directory, searchable, anyone can register
+- **Unlisted**: Direct link required, not in directory, anyone with link can register
+- **Private**: Invitation-only, requires attendee approval
+- **Internal**: Restricted to your organization's domain
+
+```javascript
+const visibilityOptions = {
+  visibility: 'public',
+  requireApproval: false,
+  allowedDomains: [], // empty = all domains
+  maxRegistrationsPerEmail: 1
+};
+```
+
+## Best Practices
+
+### Start with Clear Objectives
+Define your event's purpose and sustainability targets before diving into details. This helps maintain focus throughout the creation process.
+
+### Set Realistic Capacity
+Consider venue size, staffing, and sustainability impact when setting capacity. Smaller, well-executed events often have better outcomes.
+
+### Communicate Sustainability Upfront
+Highlight your green initiatives in the event description. Attendees who value sustainability are more likely to register and participate actively.
+
+### Enable All Relevant Tracking
+The more data points you track, the better your post-event impact report will be. Enable all relevant metrics during setup.
+
+### Test the Registration Flow
+Always test the complete registration process before publishing. Have a colleague complete a test registration to catch any issues.
+
+### Plan for Accessibility
+Ensure your event is accessible to all attendees. Include information about wheelchair access, dietary accommodations, and assistive technologies.
+
+## Next Steps
+
+After creating your event:
+
+1. Set up [attendee management workflows](/guides/managing-attendees)
+2. Configure [impact tracking and reporting](/guides/tracking-impact)
+3. Enable [integrations with your existing tools](/guides/integrations)
+4. Review the [API documentation](/api/events) for programmatic event management
+
+## Common Issues
+
+### Event Won't Publish
+- Ensure all required fields are completed
+- Verify payment processor is properly configured for paid events
+- Check that sustainability goals have at least one focus area selected
+
+### Registration Not Working
+- Confirm event capacity hasn't been reached
+- Check that registration deadline hasn't passed
+- Verify payment processor credentials are valid
+
+### Sustainability Goals Seem Incorrect
+- Recalculate baseline after updating event details
+- Ensure location information is complete and accurate
+- Verify capacity and expected attendance numbers
+
+For additional help, contact our support team or visit the [help center](https://support.ecoevents.com).

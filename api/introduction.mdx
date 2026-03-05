@@ -1,0 +1,261 @@
+---
+title: 'API Introduction'
+description: 'Get started with the EcoEvents API to manage sustainable events programmatically'
+---
+
+## Welcome to the EcoEvents API
+
+The EcoEvents API provides a comprehensive set of endpoints to manage sustainable events, track carbon footprints, coordinate vendors, and analyze environmental impact. Built on REST principles, our API uses predictable resource-oriented URLs, accepts JSON-encoded request bodies, and returns JSON-encoded responses.
+
+## Base URL
+
+All API requests should be made to:
+
+```
+https://api.ecoevents.com/v1
+```
+
+<Note>
+  The API is only available over HTTPS. Requests made over plain HTTP will be redirected to HTTPS.
+</Note>
+
+## API Versioning
+
+The EcoEvents API uses URL-based versioning. The current version is `v1`, which is included in the base URL. We maintain backward compatibility within major versions and provide advance notice before deprecating any endpoints.
+
+When breaking changes are introduced, we'll release a new API version (e.g., `v2`) and maintain support for previous versions for at least 12 months.
+
+## Rate Limits
+
+To ensure fair usage and system stability, API requests are rate-limited based on your subscription tier:
+
+| Tier | Requests per minute | Requests per day |
+|------|---------------------|------------------|
+| Free | 60 | 1,000 |
+| Starter | 300 | 10,000 |
+| Professional | 1,200 | 50,000 |
+| Enterprise | Custom | Custom |
+
+Rate limit information is included in response headers:
+
+```
+X-RateLimit-Limit: 300
+X-RateLimit-Remaining: 287
+X-RateLimit-Reset: 1678901234
+```
+
+<Warning>
+  When you exceed the rate limit, the API returns a `429 Too Many Requests` response. Implement exponential backoff in your application to handle rate limit errors gracefully.
+</Warning>
+
+## Response Format
+
+All responses are returned in JSON format with appropriate HTTP status codes.
+
+### Success Response
+
+Successful requests return a `2xx` status code with the requested data:
+
+<CodeGroup>
+
+```json 200 OK - Single Resource
+{
+  "id": "evt_1a2b3c4d5e",
+  "name": "Green Tech Summit 2026",
+  "date": "2026-06-15T09:00:00Z",
+  "location": "San Francisco Convention Center",
+  "attendees": 500,
+  "carbonFootprint": {
+    "total": 12.5,
+    "unit": "tonnes CO2e",
+    "offset": true
+  },
+  "sustainabilityScore": 94,
+  "status": "confirmed",
+  "createdAt": "2026-03-01T10:30:00Z",
+  "updatedAt": "2026-03-05T14:22:00Z"
+}
+```
+
+```json 200 OK - Collection
+{
+  "data": [
+    {
+      "id": "evt_1a2b3c4d5e",
+      "name": "Green Tech Summit 2026",
+      "date": "2026-06-15T09:00:00Z",
+      "sustainabilityScore": 94
+    },
+    {
+      "id": "evt_2b3c4d5e6f",
+      "name": "Eco Innovation Conference",
+      "date": "2026-07-20T09:00:00Z",
+      "sustainabilityScore": 88
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "perPage": 20,
+    "total": 47,
+    "totalPages": 3
+  }
+}
+```
+
+</CodeGroup>
+
+### Error Response
+
+Errors return appropriate HTTP status codes with detailed error information:
+
+```json
+{
+  "error": {
+    "code": "invalid_request",
+    "message": "The 'date' field is required and must be a valid ISO 8601 datetime",
+    "field": "date",
+    "documentation": "https://docs.ecoevents.com/api/errors#invalid_request"
+  }
+}
+```
+
+## HTTP Status Codes
+
+The API uses standard HTTP status codes to indicate the success or failure of requests:
+
+| Code | Status | Description |
+|------|--------|-------------|
+| 200 | OK | Request succeeded |
+| 201 | Created | Resource created successfully |
+| 204 | No Content | Request succeeded with no response body |
+| 400 | Bad Request | Invalid request parameters |
+| 401 | Unauthorized | Missing or invalid authentication |
+| 403 | Forbidden | Authenticated but not authorized |
+| 404 | Not Found | Resource doesn't exist |
+| 409 | Conflict | Request conflicts with current state |
+| 422 | Unprocessable Entity | Valid request but semantic errors |
+| 429 | Too Many Requests | Rate limit exceeded |
+| 500 | Internal Server Error | Server-side error |
+| 503 | Service Unavailable | Temporary server unavailability |
+
+## Error Codes
+
+In addition to HTTP status codes, error responses include specific error codes:
+
+| Error Code | Description |
+|------------|-------------|
+| `authentication_failed` | Invalid API key or expired token |
+| `insufficient_permissions` | Missing required permissions for operation |
+| `invalid_request` | Malformed request or missing required fields |
+| `resource_not_found` | Requested resource doesn't exist |
+| `validation_error` | Request validation failed |
+| `rate_limit_exceeded` | Too many requests |
+| `duplicate_resource` | Resource already exists |
+| `carbon_calculation_failed` | Error calculating environmental impact |
+| `vendor_unavailable` | Sustainable vendor service unavailable |
+| `payment_required` | Subscription upgrade required |
+
+<Note>
+  Each error response includes a `documentation` URL pointing to detailed information about the error and how to resolve it.
+</Note>
+
+## Pagination
+
+List endpoints support pagination using `page` and `perPage` query parameters:
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET "https://api.ecoevents.com/v1/events?page=2&perPage=50" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const response = await fetch(
+  'https://api.ecoevents.com/v1/events?page=2&perPage=50',
+  {
+    headers: {
+      'Authorization': 'Bearer YOUR_API_KEY',
+      'Content-Type': 'application/json'
+    }
+  }
+);
+
+const data = await response.json();
+console.log(data.pagination.total); // Total number of events
+```
+
+```python Python
+import requests
+
+response = requests.get(
+    'https://api.ecoevents.com/v1/events',
+    params={'page': 2, 'perPage': 50},
+    headers={'Authorization': 'Bearer YOUR_API_KEY'}
+)
+
+data = response.json()
+print(f"Total events: {data['pagination']['total']}")
+```
+
+</CodeGroup>
+
+**Pagination Parameters:**
+- `page` (default: 1): Page number to retrieve
+- `perPage` (default: 20, max: 100): Number of items per page
+
+## Filtering and Sorting
+
+Many list endpoints support filtering and sorting:
+
+```bash
+# Filter events by date range and sustainability score
+GET /v1/events?startDate=2026-06-01&endDate=2026-12-31&minScore=85
+
+# Sort events by carbon footprint (ascending)
+GET /v1/events?sortBy=carbonFootprint&order=asc
+```
+
+## Idempotency
+
+For `POST` and `PATCH` requests, you can include an `Idempotency-Key` header to safely retry requests without duplicating operations:
+
+```bash
+curl -X POST "https://api.ecoevents.com/v1/events" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: unique-key-12345" \
+  -d '{"name": "Sustainable Future Summit"}'
+```
+
+## Webhooks
+
+EcoEvents supports webhooks to notify your application of events in real-time. Configure webhook endpoints in your dashboard to receive notifications for:
+
+- Event creation, updates, and cancellations
+- Carbon footprint calculations completed
+- Sustainability score changes
+- Vendor confirmations
+- Payment processing
+
+## SDK and Libraries
+
+Official SDKs are available for popular programming languages:
+
+- **Node.js**: `npm install @ecoevents/sdk`
+- **Python**: `pip install ecoevents`
+- **Ruby**: `gem install ecoevents`
+- **PHP**: `composer require ecoevents/sdk`
+
+## Support
+
+Need help? Reach out to our developer support team:
+
+- **Email**: api-support@ecoevents.com
+- **Documentation**: https://docs.ecoevents.com
+- **Status Page**: https://status.ecoevents.com
+- **Community Forum**: https://community.ecoevents.com
+
+<Note>
+  Enterprise customers have access to dedicated support channels and SLA guarantees. Contact your account manager for details.
+</Note>
