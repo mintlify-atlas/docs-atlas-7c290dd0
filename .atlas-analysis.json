@@ -1,0 +1,81 @@
+{
+  "projectType": "saas",
+  "projectName": "EcoEvents",
+  "projectDescription": "A sustainable event management platform for organizing and tracking eco-friendly events.",
+  "theme": "almond",
+  "primaryColor": "#81C784",
+  "lightColor": null,
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/event-management",
+              "features/attendee-tracking",
+              "features/sustainability-metrics",
+              "features/analytics"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/creating-events",
+              "guides/managing-attendees",
+              "guides/tracking-impact",
+              "guides/integrations"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api/introduction",
+              "api/authentication"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
+              "api/events",
+              "api/attendees",
+              "api/analytics",
+              "api/webhooks"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Event creation and management",
+    "Attendee registration and tracking",
+    "Sustainability metrics and carbon footprint tracking",
+    "Real-time analytics and reporting",
+    "Webhook integrations"
+  ],
+  "publicApiSurface": [
+    "POST /api/events",
+    "GET /api/events/:id",
+    "PUT /api/events/:id",
+    "DELETE /api/events/:id",
+    "POST /api/attendees",
+    "GET /api/attendees",
+    "GET /api/analytics/sustainability",
+    "POST /api/webhooks"
+  ]
+}
